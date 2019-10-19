@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Elasticsearch - JPower | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://www.huweihuang.com/article/Elasticsearch笔记/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#elasticsearch" title="elasticsearch">elasticsearch</a>
+                            
+                        </div>
+                        <h1>Elasticsearch</h1>
+                        <h2 class="subheading">Elasticsearch笔记</h2>
+                        <span class="meta">
+                            Posted by JPower on
+                            2019-10-19
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JPower</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1><span id="elasticsearch简介">Elasticsearch简介</span></h1>
+<p>Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，就是一个分布式的文档数据存储系统。ES是分布式的。文档数据存储系统。文档数据，存储系统。<br>
+文档数据：es可以存储和操作json文档类型的数据，而且这也是es的核心数据结构。<br>
+存储系统：es可以对json文档类型的数据进行存储，查询，创建，更新，删除，等等操作。其实已经起到了一个什么样的效果呢？其实ES满足了这些功能，就可以说已经是一个NoSQL的存储系统了。</p>
+<p>围绕着document在操作，其实就是把es当成了一个NoSQL存储引擎，一个可以存储文档类型数据的存储系统，在操作里面的document。</p>
+<p>适合什么类型的应用程序呢？</p>
+<p>（1）数据量较大，es的分布式本质，可以帮助你快速进行扩容，承载大量数据<br>
+（2）数据结构灵活多变，随时可能会变化，而且数据结构之间的关系，非常复杂，如果我们用传统数据库，那是不是很坑，因为要面临大量的表<br>
+（3）对数据的相关操作，较为简单，比如就是一些简单的增删改查，用我们之前讲解的那些document操作就可以搞定<br>
+（4）NoSQL数据库，适用的也是类似于上面的这种场景</p>
+<h1><span id="elasticsearch的功能">Elasticsearch的功能</span></h1>
+<p>（1）分布式的搜索引擎和数据分析引擎</p>
+<p>搜索：百度，网站的站内搜索，IT系统的检索<br>
+数据分析：电商网站，最近7天牙膏这种商品销量排名前10的商家有哪些；新闻网站，最近1个月访问量排名前3的新闻版块是哪些<br>
+分布式，搜索，数据分析</p>
+<p>（2）全文检索，结构化检索，数据分析</p>
+<p><strong>全文检索</strong>：我想搜索商品名称包含牙膏的商品，select * from products where product_name like &quot;%牙膏%&quot;<br>
+<strong>结构化检索</strong>：我想搜索商品分类为日化用品的商品都有哪些，select * from products where category_id=‘日化用品’ 部分匹配、自动完成、搜索纠错、搜索推荐<br>
+<strong>数据分析</strong>：我们分析每一个商品分类下有多少个商品，select category_id,count(*) from products group by category_id</p>
+<p>（3）对海量数据进行近实时的处理</p>
+<p>分布式：ES自动可以将海量数据分散到多台服务器上去存储和检索<br>
+海联数据的处理：分布式以后，就可以采用大量的服务器去存储和检索数据，自然而然就可以实现海量数据的处理了<br>
+近实时：检索个数据要花费1小时（这就不要近实时，离线批处理，batch-processing）；在秒级别对数据进行搜索和分析</p>
+<p>跟分布式/海量数据相反的：lucene，单机应用，只能在单台服务器上使用，最多只能处理单台服务器可以处理的数据量</p>
+<h2><span id="名词概念">名词概念</span></h2>
+<ol>
+<li>
+<p>Index：索引，包含一堆有相似结构的文档数据，比如可以有一个客户索引，商品分类索引，订单索引，索引有一个名称。一个index包含很多document，一个index就代表了一类类似的或者相同的document。比如说建立一个product index，商品索引，里面可能就存放了所有的商品数据，所有的商品document。</p>
+</li>
+<li>
+<p>Cluster：集群，包含多个节点，每个节点属于哪个集群是通过一个配置（集群名称，默认是elasticsearch）来决定的，对于中小型应用来说，刚开始一个集群就一个节点很正常</p>
+</li>
+<li>
+<p>Node：节点，集群中的一个节点，节点也有一个名称（默认是随机分配的），节点名称很重要（在执行运维管理操作的时候），默认节点会去加入一个名称为“elasticsearch”的集群，如果直接启动一堆节点，那么它们会自动组成一个elasticsearch集群，当然一个节点也可以组成一个elasticsearch集群</p>
+</li>
+<li>
+<p>Shard</p>
+<p>代表索引分片，es可以把一个完整的索引分成多个分片，这样的好处是可以把一个大的索引拆分成多个，分布到不同的节点上。构成分布式搜索。分片的数量只能在索引创建前指定，并且索引创建后不能更改。</p>
+<p>ES集群中索引可能由多个分片构成，并且每个分片可以拥有多个副本。通过将一个单独的索引分为多个分片，我们可以处理不能在一个单一的服务器上面运行的大型索引，由于每个分片还可以有多个副本，通过将副本分配到多个服务器，可以提高查询的负载能力。</p>
+</li>
+<li>
+<p>replica</p>
+<p>代表索引副本，es可以设置多个索引的副本，副本的作用一是提高系统的容错性，当某个节点某个分片损坏或丢失时可以从副本中恢复。二是提高es的查询效率，es会自动对搜索请求进行负载均衡。</p>
+</li>
+</ol>
+<h1><span id="elasticsearch分布式相关原理">Elasticsearch分布式相关原理</span></h1>
+<h2><span id="elasticsearch-shardampreplica机制">Elasticsearch shard&amp;replica机制</span></h2>
+<ol>
+<li>
+<p><strong>elasticsearch的一个index包含多个shard</strong></p>
+<p>假如此时建立了一个Index 有3T数据，我们有3台1T容量的机器（3个Node），如果建立index时 设置了3个primary shard 那么这3个shard会自动分配到3个node  每个shard都均匀分配到1T数据</p>
+</li>
+<li>
+<p><strong>每一个shard都是一个lucene实例和最小的工作单元，都有完整的建立索引和处理请求的能力</strong></p>
+</li>
+<li>
+<p><strong>增删结点,shard会自动在nodes中负载均衡</strong></p>
+<p>如果此时有6个结点，7个shard，那么有一个结点就会被分配到2个shard，如果此时再增加一个结点，那个shard会自动分配到新加的结点当中</p>
+</li>
+<li>
+<p><strong>一个docunment只会存在于一个primary shard当中，不可能同时存在于多个primary shard中，建立index时会将document均匀分配到多个shard当中</strong></p>
+</li>
+<li>
+<p><strong>replica shard 是 primary shard的副本分片，可以解决数据高可用、容错</strong></p>
+<p>当primay shard宕机时，replica shard可以继续处理请求,一定程度上提高了程序的吞吐量</p>
+</li>
+<li>
+<p><strong>primary shard只能建立index的时候指定，replica shard可以随时修改</strong></p>
+<p>如果分片数量设置的过小，会导致增加机器也无法分配到分片，无法进行水平扩展，也会造成单个分片的数据量变大。</p>
+<p>如果分片数量设置的过大，会导致单个结点上分片过多，形成资源浪费影响性能，还会影响搜索结果的相关性打分</p>
+</li>
+<li>
+<p><strong>primary shard 不会和自己的replica shard放在一个节点上，可以和别的replica shard放在一起。</strong></p>
+<p>如果放在一起结点宕机那么原数据和副本都会丢失</p>
+</li>
+</ol>
+<h2><span id="单node环境下创建index">单node环境下创建index</span></h2>
+<p>7.0后创建一个index默认只有一个primary shard和一个replica shard</p>
+<p>比如创建user index后primary shard会自动分配到当前Node</p>
+<p>因为primary不能和自己的replica放在同一个node，他的replica shard 没有多余的node分配，<strong>因此如果此结点宕机，数据会全部丢失</strong></p>
+<p><strong>注意！此时的集群状态为yellow 因为不是所有的replica shard都正常分配</strong></p>
+<h2><span id="多node环境下创建index">多node环境下创建index</span></h2>
+<p>假如此时有3个node，3个primary，每个primary都有一个replica 总共6个shard</p>
+<p>可以这样分配，如图所示：</p>
+<p>![img](file:///C:\Users\周大侠\AppData\Roaming\Tencent\Users\1152151276\TIM\WinTemp\RichOle\3P3O8D8MX1[48WR@V6V}{YE.png)</p>
+<ol>
+<li>如果想增大吞吐量，可以增加节点进行横向扩容，最多扩容到6个结点，因为我们只有6个shard，6个之后再继续扩容结点就没有意义了。（有几个shard就说明最多可以扩容到几个结点）6个结点 6个shard，每个shard可以占用单台服务器的所有资源，性能最好！仔细想想，此时最多允许1个结点宕机，1个宕机不会消失数据。</li>
+<li>如果还想继续扩容呢？那<strong>只能动态修改replica的数量</strong>了 <strong>因为primary只能建立索引的时候设置</strong>，到达6个结点后我们可以再为每个primary多设置一个relica 就可以多扩容3个结点到达9个结点。</li>
+<li>这多个结点都是平等的，都可以接收请求，如果数据不在自己身上，就会转发给其他结点</li>
+</ol>
+<h2><span id="elasticsearch容错机制master选举replica容错数据恢复">Elasticsearch容错机制：master选举，replica容错，数据恢复</span></h2>
+<p>假如有9个shard 3个primary shard和 3 * 2个replica shard ，3个node，每个node都有1个primary shard和2个replica</p>
+<p>当主节点宕机后：</p>
+<ol>
+<li>会自动选举另一个节点为master节点，承担起master的责任，此时集群状态为red，因为不是所有的primay都是正常工作了。</li>
+<li>将丢失的那个primary shard的其中一个replica变成 primary，此时集群状态变为yellow，因为所有的primay shard都正常工作了，但少了一个replica shard，导致不是所有的replica shard都正常工作。</li>
+<li>重启故障的node，新的主节点会将丢失的副本copy到该node，该node会继续使用之前的数据，然后同步宕机之后发生的修改。此时集群状态为green</li>
+</ol>
+<h2><span id="elasticsearch路由原理以及查询-增删改原理">Elasticsearch路由原理以及查询、增删改原理</span></h2>
+<h3><span id="路由原理主分片数量不可变谜底">路由原理（主分片数量不可变谜底）</span></h3>
+<p>当客户端连接的节点中没有所需要的数据时，连接的节点是怎么找到数据所在的节点并把请求转发给它的？</p>
+<p>当我们创建一个document时，elasticsearch会将带过来的routing number，默认就是document的_id（可能是手动指定，也可能是自动生成）通过哈希函数算出它的哈希值然后对<strong>主分片数量</strong>取余，算出document应该放在哪个分片上。</p>
+<p><strong>路由算法：shard = hash(routing) % number_of_primary_shards</strong></p>
+<p>这样在查询的时候也是通过这个路由算法找到document所在分片的节点。</p>
+<p><strong>默认的routing就是_id</strong><br>
+也可以在发送请求的时候，手动指定一个routing value，比如说put /index/type/id?routing=user_id</p>
+<p><strong>手动指定routing value是很有用的，可以保证说，某一类document一定被路由到一个shard上去，那么在后续进行应用级别的负载均衡，以及提升批量读取的性能的时候，是很有帮助的</strong></p>
+<h3><span id="查询原理">查询原理</span></h3>
+<ol>
+<li>客户端连接任意一个节点查询指定id的文档时，连接的节点成为coordinate node（协调节点）</li>
+<li>如果协调节点身上没有所需要的document，它会通过路由算法算出document所在主分片的节点</li>
+<li>此时不一定会将请求转发给这个节点，也可能转发给该主分片的副本分片所在节点，这是通过轮询算法决定的，这样可以让副本节点承受一定的压力，形成负载均衡</li>
+<li>接收请求的节点返回duocument给协调节点，然后返回给客户端</li>
+</ol>
+<p>特殊情况：document如果还在建立索引过程中，可能只有primary shard有，任何一个replica shard都没有，此时可能会导致无法读取到document，但是document完成索引建立之后，primary shard和replica shard就都有了</p>
+<h3><span id="增删改查原理">增删改查原理</span></h3>
+<ol>
+<li>客户端连接任意一个节点，连接的节点成为coordinate node（协调节点）</li>
+<li>协调节点将请求转发给通过路由算法算出来的document所在主分片的节点 （此时不会转发给副本分片所在的节点，副本节点只负责接收读请求，不接受增删改请求）</li>
+<li>主分片所在节点操作完数据后，将数据同步给副本节点，然后返回结果给协调节点</li>
+<li>协调节点将结果返回给客户端</li>
+</ol>
+<h1><span id="match-match_phrase-term区别">match, match_phrase, term区别</span></h1>
+<ul>
+<li>
+<p>match：模糊匹配 会将查询的条件进行分词然后每个词都到倒排索引中匹配，最终将结果合并，会对文档进行相关度算分</p>
+</li>
+<li>
+<p>match_phrase: 会将查询的条件进行分词然后匹配，但是分词后的每个单词都必须出现在那个字段中，而且！顺序必须相同，会对文档进行相关度算分</p>
+<p>有时候我们允许不一定非要顺序一样的话，可以利用<strong>slop</strong>属性，决定单词之间可以相隔多少距离</p>
+<p>实例：这表示quick fox之间可以相隔一个单词</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET my_index/_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot;: &#123;</span><br><span class="line">        &quot;match_phrase&quot;: &#123;</span><br><span class="line">            &quot;title&quot;: &#123;</span><br><span class="line">                &quot;query&quot;: &quot;quick fox&quot;,</span><br><span class="line">                &quot;slop&quot;:  1</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>
+<p>term：查询条件不会进行分词，作为一个整体到倒排索引中查找准确的词项，</p>
+<p>只要包含这个整体就可以，不需要和这个整体相等，会对文档进行相关度算分</p>
+</li>
+</ul>
+<h1><span id="filter和query的区别取消打分">filter和query的区别（取消打分）</span></h1>
+<ul>
+<li>filter：仅仅只是按照搜索条件过滤出需要的数据而已，不计算任何相关度分数，对相关度没有任何影响，可以提高查询效率</li>
+<li>query：会去计算每个document相对于搜索条件的相关度，并按照相关度进行排序</li>
+</ul>
+<p>实例：(在query下面使用filter需要用constant score包起来，在bool下面使用filter则不用)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#通过constant score 转成 filter，没有算分</span><br><span class="line">POST my_index/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;constant_score&quot;: &#123;</span><br><span class="line">      &quot;filter&quot;: &#123;</span><br><span class="line">          &quot;term&quot;: &#123;</span><br><span class="line">          	&quot;content.keyword&quot;: &quot;wmh&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="keyword类型">keyword类型</span></h1>
+<p>ES会自动将字符串映射为text类型，这个类型会把字段值分词然后建立倒排索引，如果我们以这个字段为查询条件，那么ES会把查询条件以建立倒排索引时相同的分词器进行分词，然后从倒排索引中匹配。</p>
+<p>但是如果我们想让查询条件不被分词然后进行搜索呢？（精准匹配）</p>
+<p>我们可以用term查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST /users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;term&quot;: &#123;</span><br><span class="line">      &quot;firstName&quot;:&quot;I LOVE YOU&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这样的话是查询不到数据的，因为该字段的类型只有一个text，默认就会将数据分词后建立倒排索引，如果精确查找就找不到了</p>
+<p><strong>为了解决这个问题</strong></p>
+<p>ES会为text类型又创建一个子字段keyword 为keyword类型，这个类型不会对数据进行分词进行保存。像这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> &quot;firstName&quot; : &#123;</span><br><span class="line">   &quot;type&quot; : &quot;text&quot;,</span><br><span class="line">   &quot;fields&quot; : &#123;</span><br><span class="line">     &quot;keyword&quot; : &#123;</span><br><span class="line">     &quot;type&quot; : &quot;keyword&quot;,</span><br><span class="line">     &quot;ignore_above&quot; : 256</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查询的时候这样查就可以了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST /users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;term&quot;: &#123;</span><br><span class="line">      &quot;firstName.keyword&quot;:&quot;I LOVE YOU&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="position_increment_gap属性作用">position_increment_gap属性作用</span></h1>
+<p>不愿写了，去看下别人的博客把：</p>
+<p><a href="https://blog.csdn.net/chuan442616909/article/details/56664861" target="_blank" rel="noopener">https://blog.csdn.net/chuan442616909/article/details/56664861</a></p>
+<h1><span id="bool查询">bool查询</span></h1>
+<p>将多个查询条件组合在一起，每个查询条件获得的评分会被合并成总的评分。</p>
+<p>包含4个类型：</p>
+<ul>
+<li>
+<p>must： 必须匹配，贡献算分</p>
+</li>
+<li>
+<p>should： 选择性匹配，贡献算分 ，如果bool下面没有must， should必须满足一个条件 否则可以不需要满足</p>
+</li>
+<li>
+<p>must_not：必须不能匹配，不贡献算分</p>
+</li>
+<li>
+<p>filter：必须匹配，不贡献算分</p>
+</li>
+</ul>
+<p><strong>语法：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#基本语法</span><br><span class="line">POST /products/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot; : &#123;</span><br><span class="line">      &quot;must&quot; : &#123;</span><br><span class="line">        &quot;term&quot; : &#123; &quot;price&quot; : &quot;30&quot; &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;filter&quot;: &#123;</span><br><span class="line">        &quot;term&quot; : &#123; &quot;avaliable&quot; : &quot;true&quot; &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;must_not&quot; : &#123;</span><br><span class="line">        &quot;range&quot; : &#123;</span><br><span class="line">          &quot;price&quot; : &#123; &quot;lte&quot; : 10 &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;should&quot; : [</span><br><span class="line">        &#123; &quot;term&quot; : &#123; &quot;productID.keyword&quot; : &quot;JODL-X-1937-#pV7&quot; &#125; &#125;,</span><br><span class="line">        &#123; &quot;term&quot; : &#123; &quot;productID.keyword&quot; : &quot;XHDK-A-1293-#fJ3&quot; &#125; &#125;</span><br><span class="line">      ],</span><br><span class="line">      &quot;minimum_should_match&quot; :1</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>bool查询可以嵌套</strong></p>
+<h1><span id="控制相关性算分">控制相关性算分</span></h1>
+<h3><span id="boost用法">boost用法</span></h3>
+<p>boost是控制相关度的一种手段，索引、字段、查询子条件都可以用</p>
+<ul>
+<li>
+<p>boost &gt; 1 打分相对提升</p>
+</li>
+<li>
+<p>0 &lt; boost &lt; 1 打分相对降低</p>
+</li>
+<li>
+<p>boost &lt; 0 打负分</p>
+</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">POST /blogs/_bulk</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;</span><br><span class="line">&#123;&quot;title&quot;:&quot;Apple iPad&quot;, &quot;content&quot;:&quot;wer&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;</span><br><span class="line">&#123;&quot;title&quot;:&quot;wer&quot;, &quot;content&quot;:&quot;Apple iPad&quot; &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">POST blogs/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;should&quot;: [</span><br><span class="line">        &#123;&quot;match&quot;: &#123;</span><br><span class="line">          &quot;title&quot;: &#123;</span><br><span class="line">            &quot;query&quot;: &quot;apple,ipad&quot;,</span><br><span class="line">            &quot;boost&quot;: 1</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;&#125;,</span><br><span class="line"></span><br><span class="line">        &#123;&quot;match&quot;: &#123;</span><br><span class="line">          &quot;content&quot;: &#123;</span><br><span class="line">            &quot;query&quot;: &quot;apple,ipad&quot;,</span><br><span class="line">            &quot;boost&quot;: 2</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;&#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="boosting-配合-positive-negative用法">boosting 配合 positive 、negative用法</span></h3>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">POST news/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;boosting&quot;: &#123;</span><br><span class="line">      &quot;positive&quot;: &#123;  // 积极的 打分相对提高</span><br><span class="line">        &quot;match&quot;: &#123;</span><br><span class="line">          &quot;content&quot;: &quot;apple&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;negative&quot;: &#123; // 消极的 打分相对降低</span><br><span class="line">        &quot;match&quot;: &#123;</span><br><span class="line">          &quot;content&quot;: &quot;pie&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;negative_boost&quot;: 0.2 // 消极的对应的boot值</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="重构查询结构">重构查询结构</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">GET /forum/_search </span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;should&quot;: [</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;content&quot;: &quot;java&quot;&#125; &#125;,</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;content&quot;: &quot;www&quot;&#125; &#125;,</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;content&quot;: &quot;eee&quot;&#125; &#125;,</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;content&quot;: &quot;rrr&quot;&#125; &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 更换成</span><br><span class="line">GET /forum/_search </span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;should&quot;: [</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;content&quot;: &quot;java&quot;&#125; &#125;,</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;content&quot;: &quot;www&quot;&#125; &#125;,</span><br><span class="line">       	&#123;</span><br><span class="line">       		&quot;bool&quot;:&#123;</span><br><span class="line">       			&quot;should&quot;:[</span><br><span class="line">       				 &#123; &quot;match&quot;: &#123; &quot;content&quot;: &quot;eee&quot;&#125; &#125;,</span><br><span class="line">        			 &#123; &quot;match&quot;: &#123; &quot;content&quot;: &quot;rrr&quot;&#125; &#125;</span><br><span class="line">       			]</span><br><span class="line">       		&#125;</span><br><span class="line">       	&#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="控制搜索结果精准度">控制搜索结果精准度</span></h1>
+<h3><span id="operator">operator</span></h3>
+<p>搜索结果精准控制的第一步：灵活使用and关键字，如果你是希望所有的搜索关键字都要匹配的，那么就用and，可以实现单纯match query无法实现的效果</p>
+<p>GET /forum/_search<br>
+{<br>
+“query”: {<br>
+“match”: {<br>
+“title”: {<br>
+				“query”: “java elasticsearch”,<br>
+				“operator”: “and”<br>
+	    }<br>
+}<br>
+}<br>
+}</p>
+<h3><span id="minimum_should_match">minimum_should_match</span></h3>
+<p>控制搜索结果的精准度的第二步：指定一些关键字中，必须至少匹配其中的多少个关键字，才能作为结果返回</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET /forum/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;title&quot;: &#123;</span><br><span class="line">        &quot;query&quot;: &quot;java elasticsearch spark hadoop&quot;,</span><br><span class="line">        &quot;minimum_should_match&quot;: &quot;75%&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">GET /forum/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;should&quot;: [</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;title&quot;: &quot;java&quot; &#125;&#125;,</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;title&quot;: &quot;elasticsearch&quot;   &#125;&#125;,</span><br><span class="line">        &#123; &quot;match&quot;: &#123; &quot;title&quot;: &quot;hadoop&quot;   &#125;&#125;,</span><br><span class="line">		&#123; &quot;match&quot;: &#123; &quot;title&quot;: &quot;spark&quot;   &#125;&#125;</span><br><span class="line">      ],</span><br><span class="line">      &quot;minimum_should_match&quot;: 3 </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="使用fuzzy-fuzziness纠正搜索文本">使用fuzzy、fuzziness纠正搜索文本</span></h1>
+<p>fuzzy搜索以后，会自动尝试将你的搜索文本进行纠错，然后去跟文本进行匹配<br>
+fuzziness，你的搜索文本最多可以纠正几个字母去跟你的数据进行匹配，默认如果不设置，就是2</p>
+<p>如果错的太多 fuzziness再大也没用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">POST /my_index/_bulk</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;</span><br><span class="line">&#123; &quot;text&quot;: &quot;Surprise me!&quot;&#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;</span><br><span class="line">&#123; &quot;text&quot;: &quot;That was surprising.&quot;&#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3 &#125;&#125;</span><br><span class="line">&#123; &quot;text&quot;: &quot;I wasn&apos;t surprised.&quot;&#125;</span><br><span class="line"></span><br><span class="line">GET /my_index/_search </span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;fuzzy&quot;: &#123;</span><br><span class="line">      &quot;text&quot;: &#123;</span><br><span class="line">        &quot;value&quot;: &quot;surprize&quot;,</span><br><span class="line">        &quot;fuzziness&quot;: 2</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"># 一般可以直接在match里面用fuzziness</span><br><span class="line">GET /my_index/_search </span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;text&quot;: &#123;</span><br><span class="line">        &quot;query&quot;: &quot;SURPIZE ME&quot;,</span><br><span class="line">        &quot;fuzziness&quot;: &quot;AUTO&quot;,</span><br><span class="line">        &quot;operator&quot;: &quot;and&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="查询相关示例">查询相关示例</span></h1>
+<h3><span id="数字range">数字Range</span></h3>
+<p>gt：大于   gte：大于等于</p>
+<p>lt： 小于   lte：小于等于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#数字 Range 查询</span><br><span class="line">GET products/_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot; : &#123;</span><br><span class="line">        &quot;constant_score&quot; : &#123;</span><br><span class="line">            &quot;filter&quot; : &#123;</span><br><span class="line">                &quot;range&quot; : &#123;</span><br><span class="line">                    &quot;price&quot; : &#123;</span><br><span class="line">                        &quot;gte&quot; : 20,</span><br><span class="line">                        &quot;lte&quot;  : 30</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="日期range">日期Range</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 日期 range</span><br><span class="line">POST products/_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot; : &#123;</span><br><span class="line">        &quot;constant_score&quot; : &#123;</span><br><span class="line">            &quot;filter&quot; : &#123;</span><br><span class="line">                &quot;range&quot; : &#123;</span><br><span class="line">                    &quot;date&quot; : &#123;</span><br><span class="line">                      &quot;gte&quot; : &quot;now-1y&quot;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>y</th>
+<th>年</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M</td>
+<td>月</td>
+</tr>
+<tr>
+<td>W</td>
+<td>周</td>
+</tr>
+<tr>
+<td>D</td>
+<td>天</td>
+</tr>
+<tr>
+<td>H/h</td>
+<td>小时</td>
+</tr>
+<tr>
+<td>M</td>
+<td>分</td>
+</tr>
+<tr>
+<td>S</td>
+<td>秒</td>
+</tr>
+</tbody>
+</table>
+<h3><span id="处理空值">处理空值</span></h3>
+<p>下面的条件为 date字段不为空</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#exists查询</span><br><span class="line">POST products/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;constant_score&quot;: &#123;</span><br><span class="line">      &quot;filter&quot;: &#123;</span><br><span class="line">        &quot;exists&quot;: &#123;</span><br><span class="line">          &quot;field&quot;: &quot;date&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="mapping相关内容">Mapping相关内容</span></h1>
+<p>我的理解：mapping就相当于数据中的表结构定义，相当于数据库中的schema约束</p>
+<p>mapping作用如下</p>
+<ol>
+<li>
+<p>定义索引有哪些字段和对应的数据类型</p>
+</li>
+<li>
+<p>决定该字段剑是否建立倒排索引、分词设置</p>
+<p>。。。。</p>
+</li>
+</ol>
+<p>一个Mapping属于一个索引的Type，一个Type有一个Mapping定义，7.0以后不需要在Mapping中指定type信息。</p>
+<h3><span id="dynamic-mapping">Dynamic Mapping</span></h3>
+<ol>
+<li>
+<p>如果直接往es插入数据，es会自动建立索引，同时建立type以及对应的mapping</p>
+<p>这使得我们不需要手动定义Mapping，ES会自动根据文档信息，推算出字段的类型</p>
+<p>但有时会与我们想要的数据类型不符。</p>
+</li>
+<li>
+<p>我们不能修改已有数据字段的mapping定义，Lucene实现的倒排索引一旦生成后就不允许修改。如果修改了字段的数据类型，会导致已被索引的数据无法被搜索，如果必须修改的话，可以Reindex重建索引。</p>
+</li>
+</ol>
+<p>但是如果我们需要在原先的文档中增加一个新字段，或者新增加的文档中包含新的字段，这都是可以做到的</p>
+<p><strong>注意。这里有一个小知识点：</strong></p>
+<p>mapping定义中有一个 &quot;dynamic&quot;属性 它有3个取值 true、false、strict</p>
+<p><strong>true为默认值</strong>，不同的取值对新增字段产生的影响如下:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>true</th>
+<th>false</th>
+<th>strict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新增字段所在文档可以被搜索 （可被索引）</td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr>
+<td>新增字段可被搜索条件搜索 （可被索引）</td>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+</tr>
+<tr>
+<td>mapping中出现该字段的定义</td>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p><strong>如果取值为strict，数据写入直接报错</strong></p>
+<p>demo:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT index/_mapping</span><br><span class="line">&#123;</span><br><span class="line">  &quot;dynamic&quot;: 取值</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="自定义mapping">自定义mapping</span></h3>
+<h3><span id="手动创建索引并指定mapping">手动创建索引并指定mapping</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PUT users</span><br><span class="line">&#123;</span><br><span class="line">    &quot;mappings&quot; : &#123;</span><br><span class="line">      &quot;properties&quot; : &#123;</span><br><span class="line">        &quot;firstName&quot; : &#123;</span><br><span class="line">          &quot;type&quot; : &quot;text&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;lastName&quot; : &#123;</span><br><span class="line">          &quot;type&quot; : &quot;text&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;mobile&quot; : &#123;</span><br><span class="line">          &quot;type&quot; : &quot;text&quot;,</span><br><span class="line">          &quot;index&quot;: false  </span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的mobile的index属性设置为了false ，代表该字段不建立倒排索引，该字段不能按照条件搜索</p>
+<h3><span id="设定null_value">设定Null_value</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">PUT users</span><br><span class="line">&#123;</span><br><span class="line">    &quot;mappings&quot; : &#123;</span><br><span class="line">      &quot;properties&quot; : &#123;</span><br><span class="line">        &quot;firstName&quot; : &#123;</span><br><span class="line">          &quot;type&quot; : &quot;text&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;lastName&quot; : &#123;</span><br><span class="line">          &quot;type&quot; : &quot;text&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;mobile&quot; : &#123;</span><br><span class="line">          &quot;type&quot; : &quot;keyword&quot;,</span><br><span class="line">          &quot;null_value&quot;: &quot;NULL&quot;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的mobile的null_value属性设置为了null ，代表该字段可以通过null值进行查询</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;mobile&quot;:&quot;NULL&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="copy_to跨字段搜索"><strong>copy_to跨字段搜索</strong></span></h3>
+<p>如果我们想需要利用一个条件查询， 2个或2个以上的字段满足这个条件都可以被搜索到，就可以通过copy_to实现，不能理解的话看下面实例和总结就懂了</p>
+<p>实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">PUT users</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;firstName&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;copy_to&quot;: &quot;fullName&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;lastName&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;copy_to&quot;: &quot;fullName&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT users/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;firstName&quot;:&quot;Ruan&quot;,</span><br><span class="line">  &quot;lastName&quot;: &quot;Yiming&quot;</span><br><span class="line">&#125;</span><br><span class="line">PUT users/_doc/2</span><br><span class="line">&#123;</span><br><span class="line">  &quot;firstName&quot;:&quot;wmh&quot;,</span><br><span class="line">  &quot;lastName&quot;: &quot;Ruan&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">POST users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">       &quot;fullName&quot;:&#123;</span><br><span class="line">        &quot;query&quot;: &quot;Ruan&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到因为在mapping中把2个字段的copey_to都设置成了fullName，我们就只需要通过fullName去搜索，firstName满足条件会被搜索出来，lastName满足条件也会被搜索出来</p>
+<p>其实就相当于就可以将多个字段的值拷贝到一个新的字段中，并建立倒排索引。我们就可以通过这个新的字段查询。<strong>注意：新的字段不会被查询出来</strong></p>
+<h3><span id="数组类型">数组类型</span></h3>
+<p>字段搜索出来的是数组，mapping中定义其实是text类型，es中没有专门的数组类型</p>
+<p>其实告诉我们的是字段的类型不管在mapping中定义的是什么，都可以用数组表示，但数组中的元素的类型必须与字段的类型相同</p>
+<h3><span id="自定义分词">自定义分词</span></h3>
+<p>(1) ES中的默认分词器: standard , 是标准分词器, 它以单词为边界进行分词. 具有如下功能:</p>
+<blockquote>
+<p>① standard token filter: 去掉无意义的标签, 如&lt;&gt;, &amp;, - 等.<br>
+② lowercase token filter: 将所有字母转换为小写字母.<br>
+③ stop token filer(默认被禁用): 移除停用词, 比如&quot;a&quot;、&quot;the&quot;等.</p>
+</blockquote>
+<p>我们通过组合不同的组件实现自己的分词器</p>
+<p>ES有3个类型的组件</p>
+<ol>
+<li>
+<p><strong>Character Filter</strong> 字符过滤器</p>
+<p>在Tokenizer之前对文本进行处理，增加删除及替换字符</p>
+<p>ES有自带的实现：html_strip、mapping、pattern_replace  …</p>
+</li>
+<li>
+<p><strong>Tokenizer</strong> 分词器 按照某种规律, 如根据空格、逗号等, 将文本块进行分解.</p>
+<p>ES有自带的实现：whitespace、standard、keyword  …</p>
+</li>
+<li>
+<p><strong>Token Filter</strong> 标记过滤器，所有被分词器分解的词都将经过token filters的处理 去掉一些无用的词或者增加词</p>
+<p>ES有自带的实现：Lowercase、stop、synonym</p>
+</li>
+</ol>
+<p>实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;:&quot;standard&quot;,</span><br><span class="line">  &quot;char_filter&quot;:[&quot;html_strip&quot;],</span><br><span class="line">  &quot;text&quot;: &quot;&lt;b&gt;hello world&lt;/b&gt;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面使用了standard的Tokenizer和html_strip的字符过滤器 没有用到标记过滤器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;standard&quot;,</span><br><span class="line">  &quot;char_filter&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;type&quot; : &quot;mapping&quot;,</span><br><span class="line">        &quot;mappings&quot; : [ &quot;- =&gt; _&quot;]</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">  &quot;text&quot;: &quot;123-456, I-test! test-990 650-555-1234&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面使用了standard的Tokenizer和 mapping的字符过滤器 将 ‘-’ 替换成’_ '，没有用到标记过滤器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#remove 加入lowercase后，The被当成 stopword删除</span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;whitespace&quot;,</span><br><span class="line">  &quot;filter&quot;: [&quot;lowercase&quot;,&quot;stop&quot;,&quot;snowball&quot;],</span><br><span class="line">  &quot;text&quot;: [&quot;The gilrs in China are playing this game!&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面使用了whitespace的Tokenizer和 lowercase、stop、snowball标记过滤器</p>
+<p>设置索引为自定义的分词器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#定制化自己的分词器</span><br><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  &quot;settings&quot;: &#123;</span><br><span class="line">    &quot;analysis&quot;: &#123;</span><br><span class="line">      &quot;char_filter&quot;: &#123;</span><br><span class="line">        &quot;&amp;_to_and&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;mapping&quot;,</span><br><span class="line">          &quot;mappings&quot;: [&quot;&amp;=&gt; and&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;filter&quot;: &#123;</span><br><span class="line">        &quot;my_stopwords&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;stop&quot;,</span><br><span class="line">          &quot;stopwords&quot;: [&quot;the&quot;, &quot;a&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;analyzer&quot;: &#123;</span><br><span class="line">        &quot;my_analyzer&quot;: &#123;</span><br><span class="line">          &quot;type&quot;: &quot;custom&quot;,</span><br><span class="line">          &quot;char_filter&quot;: [&quot;html_strip&quot;, &quot;&amp;_to_and&quot;],</span><br><span class="line">          &quot;tokenizer&quot;: &quot;standard&quot;,</span><br><span class="line">          &quot;filter&quot;: [&quot;lowercase&quot;, &quot;my_stopwords&quot;]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看自定义分词器的效果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET /my_index/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;tom&amp;jerry are a friend in the house, &lt;a&gt;, HAHA!!&quot;,</span><br><span class="line">  &quot;analyzer&quot;: &quot;my_analyzer&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还需要在mappring中指定字段使用的分词器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/_mapping</span><br><span class="line">&#123;</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">    &quot;name&quot;: &#123;</span><br><span class="line">      &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">      &quot;analyzer&quot;: &quot;my_analyzer&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="相关性和相关性算分">相关性和相关性算分</span></h1>
+<p>ES会对每个查询出来的文档进行算分，代表和查询语句匹配的程度，分越高越排在前面。ES5之前采用TF-IDF算法，现在采用BM25</p>
+<p><strong>TF-IDF算法：</strong></p>
+<p>Term frequency：搜索文本中的各个词条在field文本中出现了多少次，出现次数越多，就越相关</p>
+<p>搜索请求：hello world</p>
+<p>doc1：hello you, and world is very good<br>
+doc2：hello, how are you</p>
+<p>Inverse document frequency：搜索文本中的各个词条在整个索引的所有文档中出现了多少次，出现的次数越多，就越不相关</p>
+<p>搜索请求：hello world</p>
+<p>doc1：hello, today is very good<br>
+doc2：hi world, how are you</p>
+<p>比如说，在index中有1万条document，hello这个单词在所有的document中，一共出现了1000次；world这个单词在所有的document中，一共出现了100次</p>
+<p>doc2更相关</p>
+<p>Field-length norm：field长度，field越长，相关度越弱</p>
+<p>搜索请求：hello world</p>
+<p>doc1：{ “title”: “hello article”, “content”: “babaaba 1万个单词” }<br>
+doc2：{ “title”: “my article”, “content”: “blablabala 1万个单词，hi world” }</p>
+<p>hello world在整个index中出现的次数是一样多的</p>
+<p>doc1更相关，title field更短</p>
+<h1><span id="index-template">Index Template</span></h1>
+<p>为了避免每天重复手动创建索引，我们可以定义索引模板来帮助我们创建索引。</p>
+<p>它会按照一定规则匹配到新创建的索引上。</p>
+<ul>
+<li>
+<p>模板只对新创建的索引有效，会覆盖默认的配置</p>
+</li>
+<li>
+<p>模板有一个order属性，值更高的配置覆盖值低的模板配置</p>
+</li>
+<li>
+<p>自己手动创建索引指定配置，会覆盖模板中的配置</p>
+</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#创建index模板</span><br><span class="line">PUT _template/template_default</span><br><span class="line">&#123;</span><br><span class="line">  &quot;index_patterns&quot;: [&quot;*&quot;],</span><br><span class="line">  &quot;order&quot; : 0,</span><br><span class="line">  &quot;version&quot;: 1,</span><br><span class="line">  &quot;settings&quot;: &#123;</span><br><span class="line">    &quot;number_of_shards&quot;: 1,</span><br><span class="line">    &quot;number_of_replicas&quot;:1</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">#创建index模板，匹配规则为test*</span><br><span class="line">PUT /_template/template_test</span><br><span class="line">&#123;</span><br><span class="line">    &quot;index_patterns&quot; : [&quot;test*&quot;],</span><br><span class="line">    &quot;order&quot; : 1,</span><br><span class="line">    &quot;settings&quot; : &#123;</span><br><span class="line">    	&quot;number_of_shards&quot;: 1,</span><br><span class="line">        &quot;number_of_replicas&quot; : 2</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;mappings&quot; : &#123;</span><br><span class="line">    	&quot;date_detection&quot;: false,</span><br><span class="line">    	&quot;numeric_detection&quot;: true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>解释：</strong></p>
+<p>“date_detection”: false, （“2019-08-18” 不转换为date类型）</p>
+<p>“numeric_detection”: true （“18” 转换为数字类型）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#查看template信息</span><br><span class="line">GET /template/template_default</span><br><span class="line">GET /template/temp*</span><br><span class="line"></span><br><span class="line">#删除模板</span><br><span class="line">DELETE /_template/template_default</span><br><span class="line">DELETE /_template/template_test</span><br></pre></td></tr></table></figure>
+<h1><span id="dynamic-template">Dynamic Template</span></h1>
+<p>可以定制自己的mapping映射规则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">PUT my_index</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;dynamic_templates&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;strings_as_boolean&quot;: &#123;</span><br><span class="line">          &quot;match_mapping_type&quot;:   &quot;string&quot;,</span><br><span class="line">          &quot;match&quot;:&quot;is*&quot;,</span><br><span class="line">          &quot;mapping&quot;: &#123;</span><br><span class="line">            &quot;type&quot;: &quot;boolean&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;strings_as_keywords&quot;: &#123;</span><br><span class="line">          &quot;match_mapping_type&quot;:   &quot;string&quot;,</span><br><span class="line">          &quot;mapping&quot;: &#123;</span><br><span class="line">            &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上例所示，在mapping中定义了dynamic_templates属性，在属性里面配置了两个规则，那么当我们插入数据时，如果匹配了规则，mapping就会映射成你配置的样子</p>
+<p>例如：插入以下数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PUT my_index/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;firstName&quot;:&quot;Ruan&quot;,</span><br><span class="line">  &quot;isVIP&quot;:&quot;true&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>isVIP字段 匹配了 strings_as_boolean规则</p>
+<p>firstName字段 匹配了 strings_as_keywords规则</p>
+<p>他们的mapping映射就变成了这样</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"firstName"</span> : &#123;</span><br><span class="line">    <span class="string">"type"</span> : <span class="string">"keyword"</span></span><br><span class="line"> &#125;,</span><br><span class="line"><span class="string">"isVIP"</span> : &#123;</span><br><span class="line">    <span class="string">"type"</span> : <span class="string">"boolean"</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>再看一个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PUT my_index</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;dynamic_templates&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;full_name&quot;: &#123;</span><br><span class="line">          &quot;path_match&quot;:   &quot;name.*&quot;,</span><br><span class="line">          &quot;path_unmatch&quot;: &quot;*.middle&quot;,</span><br><span class="line">          &quot;mapping&quot;: &#123;</span><br><span class="line">            &quot;type&quot;:       &quot;text&quot;,</span><br><span class="line">            &quot;copy_to&quot;:    &quot;full_name&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>插入数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT my_index/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &#123;</span><br><span class="line">    &quot;first&quot;:  &quot;John&quot;,</span><br><span class="line">    &quot;middle&quot;: &quot;Winston&quot;,</span><br><span class="line">    &quot;last&quot;:   &quot;Lennon&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>得到的映射：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"name"</span> : &#123;</span><br><span class="line">    <span class="string">"properties"</span> : &#123;</span><br><span class="line">        <span class="string">"first"</span> : &#123;</span><br><span class="line">            <span class="string">"type"</span> : <span class="string">"text"</span>,</span><br><span class="line">            <span class="string">"copy_to"</span> : [</span><br><span class="line">                <span class="string">"full_name"</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"last"</span> : &#123;</span><br><span class="line">            <span class="string">"type"</span> : <span class="string">"text"</span>,</span><br><span class="line">            <span class="string">"copy_to"</span> : [</span><br><span class="line">                <span class="string">"full_name"</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"middle"</span> : &#123;</span><br><span class="line">            <span class="string">"type"</span> : <span class="string">"text"</span>,</span><br><span class="line">            <span class="string">"fields"</span> : &#123;</span><br><span class="line">                <span class="string">"keyword"</span> : &#123;</span><br><span class="line">                    <span class="string">"type"</span> : <span class="string">"keyword"</span>,</span><br><span class="line">                    <span class="string">"ignore_above"</span> : <span class="number">256</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="聚合分析aggregation">聚合分析（Aggregation）</span></h1>
+<p>聚合分析是除搜索外，提供对数据进行东西分析的动能，实时性高，只需要一条语句就可以得到分析结果。</p>
+<p>分类：</p>
+<ul>
+<li>
+<p><code>Bucket</code>：分桶类型，类似SQL中的GROUP BY语法</p>
+</li>
+<li>
+<p><code>Metric</code>：指标分析类型，如</p>
+<p>min,max,avg,sum,status,</p>
+<p>stats:返回一系列数值类型的统计值，包含<code>min、max、avg、sum</code>和<code>count</code></p>
+<p>extended stats：对stats的扩展，包含了更多的统计数据，比如方差、标准差等</p>
+</li>
+<li>
+<p><code>Pipeline</code>：管道分析类型，基于上一级的聚合分析结果进行在分析</p>
+</li>
+<li>
+<p><code>Matrix</code>：矩阵分析类型</p>
+</li>
+</ul>
+<h3><span id="bucket示例">Bucket示例</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#按照目的地进行分桶统计</span><br><span class="line">GET kibana_sample_data_flights/_search</span><br><span class="line">&#123;</span><br><span class="line">	&quot;size&quot;: 0, // 不返回具体数据结果</span><br><span class="line">	&quot;aggs&quot;:&#123;   // aggregation</span><br><span class="line">		&quot;flight_dest&quot;:&#123;  // 自己指定的名字</span><br><span class="line">			&quot;terms&quot;:&#123;  // 按照单词分桶 text类型按照分词后的结果分桶</span><br><span class="line">				&quot;field&quot;:&quot;DestCountry&quot;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">#按照平均票价的范围进行分桶统计</span><br><span class="line">GET kibana_sample_data_flights/_search</span><br><span class="line">&#123;</span><br><span class="line">	&quot;size&quot;: 0, // 不返回具体数据结果</span><br><span class="line">	&quot;aggs&quot;:&#123;   // aggregation</span><br><span class="line">    	&quot;price_range&quot;:&#123;   // 自己指定的名字</span><br><span class="line">        	&quot;range&quot;:&#123;  //按照范围分桶 </span><br><span class="line">            	&quot;field&quot;:&quot;AvgTicketPrice&quot;,</span><br><span class="line">                &quot;ranges&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                    &quot;to&quot;: 600</span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                    &quot;from&quot;: 600,</span><br><span class="line">                    &quot;to&quot;: 800</span><br><span class="line"></span><br><span class="line">					&#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                    &quot;from&quot;: 900</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                  ]</span><br><span class="line">               &#125;</span><br><span class="line">          &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="metric示例-avg-max-min"><strong>Metric示例</strong> avg max min</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">#查照目的地进行分桶统计后 每个桶又增加平均，最高最低价格</span><br><span class="line">GET kibana_sample_data_flights/_search</span><br><span class="line">&#123;</span><br><span class="line">	&quot;size&quot;: 0,</span><br><span class="line">	&quot;aggs&quot;:&#123;</span><br><span class="line">		&quot;flight_dest&quot;:&#123;</span><br><span class="line">			&quot;terms&quot;:&#123;</span><br><span class="line">				&quot;field&quot;:&quot;DestCountry&quot;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;aggs&quot;:&#123;</span><br><span class="line">				&quot;avg_price&quot;:&#123;</span><br><span class="line">					&quot;avg&quot;:&#123;</span><br><span class="line">						&quot;field&quot;:&quot;AvgTicketPrice&quot;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;,</span><br><span class="line">				&quot;max_price&quot;:&#123;</span><br><span class="line">					&quot;max&quot;:&#123;</span><br><span class="line">						&quot;field&quot;:&quot;AvgTicketPrice&quot;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;,</span><br><span class="line">				&quot;min_price&quot;:&#123;</span><br><span class="line">					&quot;min&quot;:&#123;</span><br><span class="line">						&quot;field&quot;:&quot;AvgTicketPrice&quot;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="聚合嵌套">聚合嵌套</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#价格统计信息+天气信息</span><br><span class="line">GET kibana_sample_data_flights/_search</span><br><span class="line">&#123;</span><br><span class="line">	&quot;size&quot;: 0,</span><br><span class="line">	&quot;aggs&quot;:&#123;</span><br><span class="line">		&quot;flight_dest&quot;:&#123;</span><br><span class="line">			&quot;terms&quot;:&#123;</span><br><span class="line">				&quot;field&quot;:&quot;DestCountry&quot;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;aggs&quot;:&#123;</span><br><span class="line">				&quot;stats_price&quot;:&#123;</span><br><span class="line">					&quot;stats&quot;:&#123;</span><br><span class="line">						&quot;field&quot;:&quot;AvgTicketPrice&quot;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;,</span><br><span class="line">				&quot;wather&quot;:&#123;</span><br><span class="line">				  &quot;terms&quot;: &#123;</span><br><span class="line">				    &quot;field&quot;: &quot;DestWeather&quot;</span><br><span class="line">				  &#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="批量查询mget">批量查询mget</span></h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">GET /_mget</span><br><span class="line">&#123;</span><br><span class="line">   &quot;docs&quot; : [</span><br><span class="line">      &#123;</span><br><span class="line">         &quot;_index&quot; : &quot;test_index&quot;,</span><br><span class="line">         &quot;_id&quot; :    1</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">         &quot;_index&quot; : &quot;test_index2&quot;,</span><br><span class="line">         &quot;_id&quot; :    2</span><br><span class="line">      &#125;</span><br><span class="line">   ]</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">GET /test_index/_doc/_mget</span><br><span class="line">&#123;</span><br><span class="line">   &quot;ids&quot;: [1, 2]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>mget的重要性</strong></p>
+<p>可以说mget是很重要的，一般来说，在进行查询的时候，如果一次性要查询多条数据的话，那么一定要用batch批量操作的api<br>
+尽可能减少网络开销次数，可能可以将性能提升数倍，甚至数十倍，非常非常之重要</p>
+<h1><span id="批量操作bulk语法">批量操作bulk语法</span></h1>
+<ol>
+<li>bulk api对json的语法，有严格的要求，每个json串不能换行，只能放一行，同时一个json串和一个json串之间，必须有一个换行</li>
+</ol>
+<ol start="2">
+<li>bulk操作中，任意一个操作失败，是不会影响其他的操作的，但是在返回结果里，会告诉你异常日志，</li>
+</ol>
+<ol start="3">
+<li>bulk request会加载到内存里，如果太大的话，性能反而会下降，因此需要反复尝试一个最佳的bulk size。一般从1000~5000条数据开始，尝试逐渐增加。另外，如果看大小的话，最好是在5~15MB之间。</li>
+</ol>
+<p>哪些类型的操作可以执行呢？<br>
+（1）delete：删除一个文档，只要1个json串就可以了<br>
+（2）create：PUT /index/type/id/_create，强制创建<br>
+（3）index：普通的put操作，可以是创建文档，也可以是全量替换文档<br>
+（4）update：执行的partial update操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST /_bulk</span><br><span class="line">&#123; &quot;delete&quot;: &#123; &quot;index&quot;: &quot;test_index&quot;, &quot;type&quot;: &quot;test_type&quot;, &quot;_id&quot;: &quot;3&quot; &#125;&#125; </span><br><span class="line">&#123; &quot;create&quot;: &#123; &quot;index&quot;: &quot;test_index&quot;, &quot;type&quot;: &quot;test_type&quot;, &quot;_id&quot;: &quot;12&quot; &#125;&#125;</span><br><span class="line">&#123; &quot;test_field&quot;: &quot;test12&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123;&quot;index&quot;: &quot;test_index&quot;, &quot;type&quot;: &quot;test_type&quot;, &quot;_id&quot;: &quot;2&quot; &#125;&#125;</span><br><span class="line">&#123; &quot;test_field&quot;: &quot;replaced test2&quot; &#125;</span><br><span class="line">&#123; &quot;update&quot;: &#123; &quot;index&quot;: &quot;test_index&quot;, &quot;type&quot;: &quot;test_type&quot;, &quot;id&quot;: &quot;1&quot;, &quot;retry_on_conflict&quot; : 3&#125; &#125;</span><br><span class="line">&#123; &quot;doc&quot; : &#123;&quot;test_field2&quot; : &quot;bulk test1&quot;&#125; &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>为什么不用良好的json数组格式呢</strong></p>
+<ol>
+<li>
+<p>如果采用比较良好的json数组格式</p>
+<p>允许任意的换行，整个可读性非常棒，读起来很爽，es拿到那种标准格式的json串以后，要按照下述流程去进行处理</p>
+<p>（1）将json数组解析为JSONArray对象，这个时候，整个数据，就会在内存中出现一份一模一样的拷贝，一份数据是json文本，一份数据是JSONArray对象<br>
+（2）解析json数组里的每个json，对每个请求中的document进行路由<br>
+（3）为路由到同一个shard上的多个请求，创建一个请求数组<br>
+（4）将这个请求数组序列化<br>
+（5）将序列化后的请求数组发送到对应的节点上去</p>
+</li>
+<li>
+<p>耗费更多内存，更多的jvm gc开销</p>
+<p>我们之前提到过bulk size最佳大小的那个问题，一般建议说在几千条那样，然后大小在10MB左右，所以说，可怕的事情来了。假设说现在100个bulk请求发送到了一个节点上去，然后每个请求是10MB，100个请求，就是1000MB = 1GB，然后每个请求的json都copy一份为jsonarray对象，此时内存中的占用就会翻倍，就会占用2GB的内存，甚至还不止。因为弄成jsonarray之后，还可能会多搞一些其他的数据结构，2GB+的内存占用。</p>
+<p>占用更多的内存可能就会积压其他请求的内存使用量，比如说最重要的搜索请求，分析请求，等等，此时就可能会导致其他请求的性能急速下降<br>
+另外的话，占用内存更多，就会导致java虚拟机的垃圾回收次数更多，跟频繁，每次要回收的垃圾对象更多，耗费的时间更多，导致es的java虚拟机停止工作线程的时间更多</p>
+</li>
+<li>
+<p>现在的奇特格式</p>
+<p>{“action”: {“meta”}}\n<br>
+{“data”}\n<br>
+{“action”: {“meta”}}\n<br>
+{“data”}\n</p>
+<p>（1）不用将其转换为json对象，不会出现内存中的相同数据的拷贝，直接按照换行符切割json<br>
+（2）对每两个一组的json，读取meta，进行document路由<br>
+（3）直接将对应的json发送到node上去</p>
+</li>
+<li>
+<p>最大的优势在于，不需要将json数组解析为一个JSONArray对象，形成一份大数据的拷贝，浪费内存空间，尽可能地保证性能</p>
+</li>
+</ol>
+<h1><span id="查询集群健康状况">查询集群健康状况</span></h1>
+<p>GET _cluster/health<br>
+GET _cat/health<br>
+GET _cat/nodes</p>
+<h1><span id="查看有哪些索引">查看有哪些索引</span></h1>
+<p>GET /_cat/indices?v</p>
+<h1><span id="创建索引">创建索引</span></h1>
+<p>PUT /my_index<br>
+{<br>
+“settings”: {<br>
+“number_of_shards”: 1,<br>
+“number_of_replicas”: 0<br>
+},<br>
+“mappings”: {<br>
+“my_type”: {<br>
+“properties”: {<br>
+“my_field”: {<br>
+“type”: “text”<br>
+}<br>
+}<br>
+}<br>
+}<br>
+}</p>
+<h1><span id="删除索引">删除索引</span></h1>
+<p>DELETE /my_index<br>
+DELETE /index_one,index_two<br>
+DELETE /index_*<br>
+DELETE /_all</p>
+<h1><span id="修改索引">修改索引</span></h1>
+<p>PUT /my_index/_settings<br>
+{<br>
+“number_of_replicas”: 1<br>
+}</p>
+<h1><span id="查询索引信息">查询索引信息</span></h1>
+<p>GET users</p>
+<h1><span id="根据id查询文档信息">根据ID查询文档信息</span></h1>
+<p>GET /index/type/id</p>
+<h1><span id="_doc为type">_doc为type</span></h1>
+<p>#创建文档 id自动生成  (自动创建索引)<br>
+POST users2/_doc<br>
+{<br>
+	  “user” : “Mike”,<br>
+	“post_date” : “2019-04-15T14:12:12”,<br>
+	“message” : “trying out Kibana”<br>
+}</p>
+<h1><span id="创建文档并指定id-如果id存在则报错">创建文档并指定ID 如果ID存在则报错</span></h1>
+<p>PUT users/_doc/20/_create<br>
+{<br>
+“user” : “Jackwmh”,<br>
+“post_date” : “2019-05-15T14:12:12”,<br>
+“message” : “trying out Elasticsearch”<br>
+}</p>
+<h1><span id="创建文档并指定id-如果id存在则报错">创建文档并指定ID 如果ID存在则报错</span></h1>
+<p>PUT users/_create/109<br>
+{<br>
+“user” : “Jack”,<br>
+“post_date” : “2019-05-15T14:12:12”,<br>
+“message” : “trying out Elasticsearch”<br>
+}</p>
+<h1><span id="根据id查询文档信息">根据ID查询文档信息</span></h1>
+<p>GET users/_doc/1</p>
+<p>GET users/_search</p>
+<h1><span id="根据id删除文档">根据ID删除文档</span></h1>
+<p>DELETE users/_doc/1</p>
+<h1><span id="修改文档-会覆盖原来的信息-先删除再重新写入">修改文档 会覆盖原来的信息 （先删除再重新写入）</span></h1>
+<p>PUT users/_doc/1<br>
+{<br>
+	“user” : “Mike”</p>
+<p>}</p>
+<h1><span id="修改文档-在原有基础上修改-用这个比较好">修改文档 在原有基础上修改 （用这个比较好）</span></h1>
+<p>POST users/_update/1/<br>
+{<br>
+“doc”:{<br>
+“post_date” : “2019-05-15T14:12:12”,<br>
+“message” : “trying222 out Elasticsearch”<br>
+}<br>
+}</p>
+<h1><span id="修改文档-在原有基础上修改-弃用">修改文档 在原有基础上修改 （弃用）</span></h1>
+<p>POST users/_doc/1/_update<br>
+{<br>
+“doc”:{<br>
+“post_date” : “2019-05-15T14:12:12”,<br>
+“message” : “tryi222ng222 out Elasticsearch”<br>
+}<br>
+}</p>
+<p>GET users/_search<br>
+{<br>
+“query” : {<br>
+“match” : {<br>
+“user” : “wmh”<br>
+}<br>
+},<br>
+“sort”: [<br>
+{ “post_date”: “desc” }<br>
+]<br>
+}</p>
+<h1><span id="from-从第几条开始查-size-查几个">from 从第几条开始查 size 查几个</span></h1>
+<p>GET users/_search<br>
+{<br>
+“query”: { “match_all”: {} },<br>
+“from” : 2,<br>
+“size” : 2<br>
+}</p>
+<h1><span id="查询所有-包含指定字段">查询所有 包含指定字段</span></h1>
+<p>GET users/_search<br>
+{<br>
+“query”: { “match_all”: {} },<br>
+&quot;_source&quot;: [“user”]<br>
+, “profile”: “true”</p>
+<p>}<br>
+GET users/_search</p>
+<h1><span id="模糊匹配">模糊匹配</span></h1>
+<p>GET users/_search<br>
+{<br>
+“query” : {<br>
+“match” : {<br>
+“user” : “wmh”<br>
+}<br>
+}</p>
+<p>}</p>
+<h1><span id="短语匹配">短语匹配</span></h1>
+<p>GET users/_search<br>
+{<br>
+“query”: {<br>
+“match_phrase”: {<br>
+“user”: “wmh love w”<br>
+}<br>
+}<br>
+}</p>
+<p>#高亮搜索结果）<br>
+GET users/_search<br>
+{<br>
+“query” : {<br>
+“match” : {<br>
+“user” : “Mike”<br>
+}<br>
+},<br>
+“highlight”: {<br>
+“fields” : {<br>
+“user” : {}<br>
+}<br>
+}<br>
+}</p>
+<p>GET test/_search</p>
+<h1><span id="批量操作">批量操作</span></h1>
+<p>POST _bulk<br>
+{ “index” : { “_index” : “test”, “_id” : “1” } }<br>
+{ “field1” : “value1” }<br>
+{ “delete” : { “_index” : “test”, “_id” : “2” } }<br>
+{ “create” : { “_index” : “test2”, “_id” : “3” } }<br>
+{ “field1” : “value3” }<br>
+{ “update” : {&quot;_id&quot; : “1”, “_index” : “test”} }<br>
+{ “doc” : {“field2” : “value2”} }</p>
+<h1><span id="批量查询">批量查询</span></h1>
+<p>POST users/_msearch<br>
+{}<br>
+{“query” : {“match_all” : {}},“size”:7}<br>
+{“index” : “test”}<br>
+{“query” : {“match_all” : {}},“size”:1}</p>
+<h1><span id="mget-操作-批量get">mget 操作 批量GET</span></h1>
+<p>GET /_mget<br>
+{<br>
+“docs” : [<br>
+{<br>
+&quot;_index&quot; : “users”,<br>
+&quot;_id&quot; : “1”<br>
+},<br>
+{<br>
+&quot;_index&quot; : “users2”,<br>
+&quot;_id&quot; : “XaxNbGwBtkM_kXV0MggX”<br>
+}<br>
+]<br>
+}</p>
+<p>#URI中指定index<br>
+GET /users/_mget<br>
+{<br>
+“docs” : [<br>
+{</p>
+<pre><code>        &quot;_id&quot; : &quot;1&quot;
+    },
+    {
+
+        &quot;_id&quot; : &quot;2&quot;
+    }
+]
+</code></pre>
+<p>}<br>
+GET /users/_mget<br>
+{<br>
+“ids”: [“1”,“2”]<br>
+}</p>
+<p>#standard 查看standard分词器的分词效果（默认分词器）<br>
+GET _analyze<br>
+{<br>
+“analyzer”: “standard”,<br>
+“text”: “2 running Quick brown-foxes leap over lazy dogs in the summer evening.”<br>
+}</p>
+<p>#查看指定索引 指定字段指定内容的 分词效果<br>
+POST users/_analyze<br>
+{<br>
+“field”: “user”,<br>
+“text”: “wmhsdf wmh”<br>
+}</p>
+<p>#查看索引相关信息<br>
+GET kibana_sample_data_ecommerce</p>
+<p>#查看索引的文档总数<br>
+GET kibana_sample_data_ecommerce/_count</p>
+<p>#查看前10条文档，了解文档格式<br>
+POST kibana_sample_data_ecommerce/_search<br>
+{<br>
+}</p>
+<p>#_cat indices API<br>
+#查看indices<br>
+GET /_cat/indices/kibana*?v&amp;s=index</p>
+<p>#查看状态为绿的索引<br>
+GET /_cat/indices?v&amp;health=green</p>
+<p>#按照文档个数排序<br>
+GET /_cat/indices?v&amp;s=docs.count:desc</p>
+<p>#查看具体的字段<br>
+GET /_cat/indices/kibana*?pri&amp;v&amp;h=health,index,pri,rep,docs.count,mt</p>
+<p>#How much memory is used per index?<br>
+GET /_cat/indices?v&amp;h=i,tm&amp;s=tm:desc</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/hexo-theme-huweihuang/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme HuWeihuang">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Elasticsearch简介</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Elasticsearch的功能</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">名词概念</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Elasticsearch分布式相关原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">Elasticsearch shard&amp;replica机制</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">单node环境下创建index</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">多node环境下创建index</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text">Elasticsearch容错机制：master选举，replica容错，数据恢复</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.5.</span> <span class="toc-nav-text">Elasticsearch路由原理以及查询、增删改原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.5.1.</span> <span class="toc-nav-text">路由原理（主分片数量不可变谜底）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.5.2.</span> <span class="toc-nav-text">查询原理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.5.3.</span> <span class="toc-nav-text">增删改查原理</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">match, match_phrase, term区别</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">filter和query的区别（取消打分）</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">keyword类型</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">position_increment_gap属性作用</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">bool查询</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">控制相关性算分</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">9.0.1.</span> <span class="toc-nav-text">boost用法</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">9.0.2.</span> <span class="toc-nav-text">boosting 配合 positive 、negative用法</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">9.0.3.</span> <span class="toc-nav-text">重构查询结构</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">10.</span> <span class="toc-nav-text">控制搜索结果精准度</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">10.0.1.</span> <span class="toc-nav-text">operator</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">10.0.2.</span> <span class="toc-nav-text">minimum_should_match</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">11.</span> <span class="toc-nav-text">使用fuzzy、fuzziness纠正搜索文本</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">12.</span> <span class="toc-nav-text">查询相关示例</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">12.0.1.</span> <span class="toc-nav-text">数字Range</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">12.0.2.</span> <span class="toc-nav-text">日期Range</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">12.0.3.</span> <span class="toc-nav-text">处理空值</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">13.</span> <span class="toc-nav-text">Mapping相关内容</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">13.0.1.</span> <span class="toc-nav-text">Dynamic Mapping</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">13.0.2.</span> <span class="toc-nav-text">自定义mapping</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">13.0.3.</span> <span class="toc-nav-text">手动创建索引并指定mapping</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">13.0.4.</span> <span class="toc-nav-text">设定Null_value</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">13.0.5.</span> <span class="toc-nav-text">copy_to跨字段搜索</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">13.0.6.</span> <span class="toc-nav-text">数组类型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">13.0.7.</span> <span class="toc-nav-text">自定义分词</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">14.</span> <span class="toc-nav-text">相关性和相关性算分</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">15.</span> <span class="toc-nav-text">Index Template</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">16.</span> <span class="toc-nav-text">Dynamic Template</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">17.</span> <span class="toc-nav-text">聚合分析（Aggregation）</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">17.0.1.</span> <span class="toc-nav-text">Bucket示例</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">17.0.2.</span> <span class="toc-nav-text">Metric示例 avg max min</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">17.0.3.</span> <span class="toc-nav-text">聚合嵌套</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">18.</span> <span class="toc-nav-text">批量查询mget</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">19.</span> <span class="toc-nav-text">批量操作bulk语法</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">20.</span> <span class="toc-nav-text">查询集群健康状况</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">21.</span> <span class="toc-nav-text">查看有哪些索引</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">22.</span> <span class="toc-nav-text">创建索引</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">23.</span> <span class="toc-nav-text">删除索引</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">24.</span> <span class="toc-nav-text">修改索引</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">25.</span> <span class="toc-nav-text">查询索引信息</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">26.</span> <span class="toc-nav-text">根据ID查询文档信息</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">27.</span> <span class="toc-nav-text">_doc为type</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">28.</span> <span class="toc-nav-text">创建文档并指定ID 如果ID存在则报错</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">29.</span> <span class="toc-nav-text">创建文档并指定ID 如果ID存在则报错</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">30.</span> <span class="toc-nav-text">根据ID查询文档信息</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">31.</span> <span class="toc-nav-text">根据ID删除文档</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">32.</span> <span class="toc-nav-text">修改文档 会覆盖原来的信息 （先删除再重新写入）</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">33.</span> <span class="toc-nav-text">修改文档 在原有基础上修改 （用这个比较好）</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">34.</span> <span class="toc-nav-text">修改文档 在原有基础上修改 （弃用）</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">35.</span> <span class="toc-nav-text">from 从第几条开始查 size 查几个</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">36.</span> <span class="toc-nav-text">查询所有 包含指定字段</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">37.</span> <span class="toc-nav-text">模糊匹配</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">38.</span> <span class="toc-nav-text">短语匹配</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">39.</span> <span class="toc-nav-text">批量操作</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">40.</span> <span class="toc-nav-text">批量查询</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">41.</span> <span class="toc-nav-text">mget 操作 批量GET</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#elasticsearch" title="elasticsearch">elasticsearch</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/huwh_" target="_blank">CSDN Blog 胡伟煌</a></li>
+                    
+                        <li><a href="http://dockone.io/people/胡伟煌" target="_blank">DockOne 胡伟煌</a></li>
+                    
+                        <li><a href="https://yq.aliyun.com/u/huweihuang" target="_blank">阿里云栖社区 胡伟煌</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/jpower">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JPower 2019 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://www.huweihuang.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://www.huweihuang.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
