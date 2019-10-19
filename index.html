@@ -88,7 +88,7 @@
                     <div class="site-heading">
                         <h1>JPower</h1>
                         <!--<hr class="small">-->
-                        <span class="subheading">个人博客</span>
+                        <span class="subheading">jpower&#39;s 小窝</span>
                     </div>
                 
 
@@ -134,14 +134,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -211,41 +211,110 @@
 
 <div class="post-preview">
 
-    <a href="/article/hexo-theme-huweihuang/">
+    <a href="/article/RabbitMQ工作模式总结/">
         <h2 class="post-title">
-            
-                <i class="fa fa-thumb-tack" style="color:#F4711F" ></i>
-                <!-- <i class="fa fa-thumb-tack" style="color:#F89E8C" ></i> -->
-                <!-- <i class="fa fa-thumb-tack" style="color:#1CB7ED" ></i> -->
-                <font color=#F4711F>置顶</font>
-                <!-- <font color=#F89E8C>置顶</font>  -->
-                <!-- <font color=#1CB7ED>置顶</font>  -->
                                  
-            [Hexo] Theme HuWeihuang
+            RabbitMQ工作模式总结
         </h2>
         <h3 class="post-subtitle">
-            This is hexo theme Demo.
+            
         </h3>
         <div class="post-content-preview">
-            
-This HuWeihuang theme created by HuWeihuang modified from the original Porter YuHsuan
+            先看下rabbitqmq的基本架构
 
-Live Demo
-Hu Weihuang Blog : www.huweihuang.com
+rabbitmq组件
 
-Install Hexo
-Install Node.js  and Git
-123#For Macbrew instal......
+生产者 producer
+消费者 consumer
+broker 该消息队列进程 就代表这个消息队列   broker里面包含了重要的2个组件
+一个是交换机：Exchange
+一个是队列：Queue
+
+
+下面介绍几种工作模式：
+简单队列模式
+不用显示声明交换机，只需声明一个队列
+	生产者指定队列名发送消息给mq，然后会有一个默认的......
         </div>
     </a>
     
         <p class="post-meta" style="margin: 10px 0;">
             Posted by JPower on
-            2017-09-18
+            2019-10-19
         </p>
         <div class="tags">
             
-              <a href="/tags/#Hexo" title="Hexo">Hexo</a>
+              <a href="/tags/#消息队列" title="消息队列">消息队列</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/MySQL索引总结/">
+        <h2 class="post-title">
+                                 
+            MySQL索引总结
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+本文针对InnoDB索引总结
+总结于：掘金小册 MySQL 是怎样运行的：从根儿上理解 MySQL https://juejin.im/book/5bffcbc9f265da614b11b731
+作者：小孩子4919
+
+数据页结构分析
+InnoDB存储引擎会把表数据存储到磁盘上，当想对数据操作时需要把磁盘上的数据加载到内存中来，为了提高效率，InnoDB不会一条一条的加载，它会以页（16K......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by JPower on
+            2019-10-19
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#mysql" title="mysql">mysql</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/1.7HashMap/">
+        <h2 class="post-title">
+                                 
+            Jdk1.7HashMap源码解析
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+HashMap已经看了很多篇文章了，今天还是自己解析一遍吧。
+
+什么是哈希表？
+我先大致介绍下HashMap的内部结构再跟着源码解读一番
+众所周知HashMap的内部就是一个哈希表
+如果我们利用数组可随机访问的特性，将要存入的键通过一种哈希算法转换成一个数字，并把这个数字转换成数组的下标，然后将键和他对应value放入数组中。那么我们再通过这个键查找时，只需要继续利用这个算法，那么我们就只......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by JPower on
+            2019-10-19
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#java基础" title="java基础">java基础</a>
             
         </div>
     
@@ -322,7 +391,15 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
     <div class="tags">
         
             
-            <a href="/tags/#Hexo" title="Hexo" rel="1">Hexo</a>
+            <a href="/tags/#消息队列" title="消息队列" rel="1">消息队列</a>
+            
+        
+            
+            <a href="/tags/#java基础" title="java基础" rel="1">java基础</a>
+            
+        
+            
+            <a href="/tags/#mysql" title="mysql" rel="1">mysql</a>
             
         
             
@@ -354,6 +431,15 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
             
 
             
+                <li>
+                    <a target="_blank" href="http://weibo.com/5129190650">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
 
             
 
@@ -382,11 +468,19 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
     <ul>
       
         <li>
-          <a href="/article/Elasticsearch笔记/">Elasticsearch</a>
+          <a href="/article/RabbitMQ工作模式总结/">RabbitMQ工作模式总结</a>
         </li>
       
         <li>
-          <a href="/article/hexo-theme-huweihuang/">[Hexo] Theme HuWeihuang</a>
+          <a href="/article/MySQL索引总结/">MySQL索引总结</a>
+        </li>
+      
+        <li>
+          <a href="/article/1.7HashMap/">Jdk1.7HashMap源码解析</a>
+        </li>
+      
+        <li>
+          <a href="/article/Elasticsearch笔记/">Elasticsearch</a>
         </li>
       
     </ul>
@@ -400,11 +494,7 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
 <ul class="list-inline">
 
     
-        <li><a href="http://blog.csdn.net/huwh_" target="_blank">CSDN Blog 胡伟煌</a></li>
-    
-        <li><a href="http://dockone.io/people/胡伟煌" target="_blank">DockOne 胡伟煌</a></li>
-    
-        <li><a href="https://yq.aliyun.com/u/huweihuang" target="_blank">阿里云栖社区 胡伟煌</a></li>
+        <li><a href="http://blog.csdn.net/wmh1152151276" target="_blank">CSDN Blog jpower</a></li>
     
 </ul>
 
@@ -413,7 +503,7 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">4</span></li></ul>
     </div>
 
         <hr>
@@ -437,6 +527,15 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
                 
 
                 
+                    <li>
+                        <a target="_blank" href="http://weibo.com/5129190650">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
 
                 
 
@@ -457,15 +556,15 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
                 <p class="copyright text-muted">
                     Copyright &copy; JPower 2019 
                     <br>
-                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    Theme by <a href="http://huweihuang.com">胡伟煌</a> 
                     <span style="display: inline-block; margin: 0 5px;">
                         <i class="fa fa-heart"></i>
                     </span> 
-                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    re-Ported by <a href="http://www.jpower.top">jpower</a> | 
                     <iframe
                         style="margin-left: 2px; margin-bottom:-5px;"
                         frameborder="0" scrolling="0" width="91px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                        src="https://ghbtns.com/github-btn.html?user=jpower&repo=jpower.github.io&type=star&count=true" >
                     </iframe>
                 </p>
             </div>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          MySQL索引总结 - JPower | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://www.jpower.top/article/MySQL索引总结/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#mysql" title="mysql">mysql</a>
+                            
+                        </div>
+                        <h1>MySQL索引总结</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by JPower on
+                            2019-10-19
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">JPower</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p>本文针对InnoDB索引总结<br>
+总结于：掘金小册 MySQL 是怎样运行的：从根儿上理解 MySQL <a href="https://juejin.im/book/5bffcbc9f265da614b11b731" target="_blank" rel="noopener">https://juejin.im/book/5bffcbc9f265da614b11b731</a><br>
+作者：小孩子4919</p>
+</blockquote>
+<h2><span id="数据页结构分析">数据页结构分析</span></h2>
+<p>InnoDB存储引擎会把表数据存储到磁盘上，当想对数据操作时需要把磁盘上的数据加载到内存中来，为了提高效率，InnoDB不会一条一条的加载，它会以页（16KB）为单位读取磁盘上的数据到内存中。<strong>页是InnoDB进行内存和硬盘交互的基本单位</strong></p>
+<p>在每个页中数据是是怎么存放的？（<strong>其实页有很多类型，这里指存放真实数据的数据页</strong>）<br>
+<strong>除了每个页中的用户真实数据外，数据页中还会自己生成两个虚拟的记录 一个最大记录一个最小记录</strong></p>
+<p>这些记录会以<strong>主键的顺序从小到大链接在一起形成一个单链表</strong>，每行记录信息中的next_record 代表下一行记录地址的偏移量，可以认为这个next_record指向着下一行记录</p>
+<p>最小记录的next_record指向着用户数据的第一条记录也就是主键值最小的那一条记录。<br>
+用户数据的最后一条记录也就是主键值最大的那一条记录的next_record指向着最大记录<br>
+<strong>如图所示 来源：MySQL 是怎样运行的：从根儿上理解 MySQL ：</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190523144234761.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtaDExNTIxNTEyNzY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+现在看的话如果我们想在这个页中找到主键值为4的记录，我们必须从最小记录开始，一行一行遍历这个单链表直到找到这个主键为4的记录或者找到第一个主键值比4大的那行记录就可以放弃查找了。</p>
+<p>这样找的话是不是太慢了？如果当前页的数据有很多，这样的查找速度是相当慢的。</p>
+<p><strong>InnoDB会为这些数据分组，然后组成一个目录方便我们查找 具体如下：</strong><br>
+假设当前页没有存放真实数据，默认会有两条记录一个最小记录一个最大记录<br>
+那么InnoDB首先会把这些数据分为两组，并把每个组内的最后一条记录的地址偏移量顺序提取出来放在页的尾部<br>
+形成2个槽。<br>
+最小记录自己形成一个组，最大记录自己形成一组，页的尾部有2个槽，分别指向他们</p>
+<blockquote>
+<p>每个分组中的记录条数是有规定的： <strong>对于最⼩记录所在的分组只能有 1 条记录，最⼤记录所在的分组拥 有的记录条数只能在 1 ~ 8条之间，剩下的分组中记录的条数范围只 能在是 4 ~ 8 条之间</strong></p>
+</blockquote>
+<p>所以现在当我们插入数据，都会被分在以最大记录为最后一条记录的那个组中，直到这个组内的数据到达8条</p>
+<p>如果往一个记录已经到达8条的组中添加数据，InnoDB会将组中 的记录拆分成两个组，⼀个组中4条记录，另⼀个5条记录。然后新添加一个槽指向那4条记录中最大的那条记录</p>
+<p><strong>之后每插⼊⼀条记录，都会从⻚⽬录中找到主键值⽐本记录的 主键值⼤并且差值最⼩的槽进行插入，</strong></p>
+<p><strong>注意：每个分组内的数据以主键顺序从小到达存放，每个槽指向每个组内的最后一条数据也就是最大的那条记录。</strong></p>
+<p>假设此时这个页中的数据有18条，<strong>那么具体结构如图所示 来源：MySQL 是怎样运行的：从根儿上理解 MySQL</strong> ：<br>
+<img src="https://img-blog.csdnimg.cn/20190523152657826.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtaDExNTIxNTEyNzY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+有了这个目录之后，此时我们进行查找一个主键值为10的数据是这样操作的：<br>
+对这4个槽进行2分查找：</p>
+<ol>
+<li>先定位到槽2 槽2指向的记录的主键值为8  10比8大</li>
+<li>继续二分，定位到槽3，槽3指向记录的主键值为12 10比12小</li>
+<li>确定要找的记录在槽3，此时只需要遍历槽3所在的分组</li>
+<li>因为每个槽指向的是所在分组的最大的那条记录，我们可以找到槽2指向的那条记录 然后一个个遍历找到我们所需要的结果。</li>
+</ol>
+<h3><span id="这时可以总结一波">这时可以总结一波</span></h3>
+<ol>
+<li>
+<p><strong>页是InnoDB进行内存和硬盘交互的基本单位，一页大小为1 6 KB，在⼀般情况下，⼀次最少从磁盘<br>
+中读取16KB的内容到内存中，⼀次最少把内存中的16KB内容刷新到 磁盘中。</strong></p>
+</li>
+<li>
+<p><strong>在页中以主键查找数据时分为2步</strong></p>
+<ul>
+<li>
+<p>[ ] 需要经过二分查找找到数据所对应的槽，并找到槽内最小的那条记录</p>
+</li>
+<li>
+<p>[ ] 通过记录的next_record属性遍历单链表找到所需要的那条记录</p>
+</li>
+</ul>
+</li>
+</ol>
+<pre><code>**注意前提!!！必须以主键为条件查找，因为页内的数据是以主键从小到大排列的，形成的目录也是以每个组的最后一条记录的主键大小排列的,如果以其他列为条件进行搜索，那很不幸，必须遍历整个单链表** 
+</code></pre>
+<h2><span id="索引分析">索引分析</span></h2>
+<p>在InnoDB中每个数据页都有2个属性一个上一页一个下一页，这些数据页连接起来形成了一个双向链表，他们在物理上是不连续的 因为没有那么大的连续存储空间。<br>
+<strong>如图所示 来源：MySQL 是怎样运行的：从根儿上理解 MySQL：</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190523201459989.png" alt="在这里插入图片描述"><br>
+此时此刻我们已经知道在单个页中可以快速找到我们所需要的数据，但是又如何找到数据所在的页呢？</p>
+<p><strong>如果不采取任何优化措施，我们就必须遍历整个双向链表去查找数据所在的页，然后在页中通过目录查找数据，这个查询过程是相当的慢的，相当于全表扫描</strong></p>
+<p>那怎么优化呢？</p>
+<p>可以参考在页中根据主键值快速定位⼀条记录在⻚中的位置⽽设 ⽴的⻚⽬录呀，我们也可以为每个页建一个目录，让我们快速找到数据所在的页</p>
+<p>这个目录怎么建呢?</p>
+<p><strong>初步思路是这样的：</strong></p>
+<p>为这些页建立一个目录，将每个页的最小记录提取出来当作目录项 比如：<br>
+将页10的最小记录 主键值1 提取出来<br>
+将页28的最小记录主键值 5提取出来<br>
+将页9的最小记录 主键值12 提取出来<br>
+将页20的最小记录 主键值 209提取出来</p>
+<p>为了找到所在的页 目录项还包含主键值所在的页号<br>
+这些目录项在物理上是连续的 我们把它放在一个数组中方便二分查找</p>
+<p><strong>如图所示：来源：MySQL 是怎样运行的：从根儿上理解 MySQL：</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190523202715865.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtaDExNTIxNTEyNzY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+这样的话想找到数据所在的页是不是方便很多了呀<br>
+比如此时想找到主键为8的那条记录<br>
+只需要通过二分法确定到目录项2 然后定位到页28 然后在这个数据页中通过目录查找数据</p>
+<p>但是这里有一个问题，当我们的数据页有很多时，我们需要生成很多目录项，这些目录项是连续存储的 我们根本没有这么多连续的空间存储。</p>
+<p><strong>InnoDB会生成一个存储目录项的页，这个页和我们存储真实数据的页并没有什么不同，只不过存储的是目录项记录。</strong></p>
+<ol>
+<li>存储目录项记录的页中 也有和存储真实数据页一样的槽 来方便我们在页中找到目录项记录</li>
+<li>目录项记录包含主键值和页号，方便定位到指定页号主键值最小的那条记录</li>
+<li>真实记录包含所有列的值</li>
+</ol>
+<p><strong>这些目录项和真实数据一样以页为单位来存储，多个存储目录项的页也是通过双向链表连接起来的</strong></p>
+<p>此时上图变成了这样 <strong>来源：MySQL 是怎样运行的：从根儿上理解 MySQL：</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190523205310985.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtaDExNTIxNTEyNzY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+此时想象一种情况，当最底层存储真实数据的页越来越多，越来越多，上一层存储目录项的页肯定也会越来越多</p>
+<p>此时我们为了找到符合条件的目录项 还不是要遍历存储目录项的页所形成的双向链表？</p>
+<p><strong>你傻啊！ 再为这一层形成一个目录呗！，一个目录不够就2个 再不够就3个</strong></p>
+<p>如图所示： <strong>来源：MySQL 是怎样运行的：从根儿上理解 MySQL：</strong><br>
+<img src="https://img-blog.csdnimg.cn/20190523210113371.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtaDExNTIxNTEyNzY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+其实这就是一颗B+树<br>
+InnoDB存储引擎索引的实现方式就是B+树<br>
+其实这个B+树的高度最多也就3、4层，因为这个<strong>B+树的每个结点都相当于一个数据页</strong>，每个页中的数据其实是可以存放很多的，假设一个结点中可以存1000条数据，那么4层的B+树就可以存放很多个亿的数据了！</p>
+<p><strong>这样的实现方式极大的减少了访问磁盘的次数，因为InnoDB是以页为单位从磁盘加载数据到内存中的，<br>
+假设有4层结点（3层目录项结点，最后一层是存储真实数据的结点），那我们只需要访问4次磁盘就可以找到我们所需要的数据，极大的降低了IO成本！</strong></p>
+<p>假设一个结点只能存放2条数据，相当于二叉树，那你想想看，你要访问几次数据页，相当于访问几次磁盘！！</p>
+<h3><span id="注意形成这颗b树必须有几个前提">注意！形成这颗B+树必须有几个前提！</span></h3>
+<ol>
+<li>⻚内的记录是按照主键的⼤⼩顺序排成⼀个单向链表。</li>
+<li>各个存放⽤户记录的⻚也是根据⻚中⽤户记录的主键⼤⼩ 顺序排成⼀个双向链表</li>
+<li>存放⽬录项记录的⻚分为不同的层次，在同⼀层次中的⻚ 也是根据⻚中⽬录项记录的主键⼤⼩顺序排成⼀个双向链 表。</li>
+</ol>
+<p><strong>这3个方面都必须是有序的 不然 你仔细想想怎么生成目录进行查找  不过不一定非得是按照主键进行排序：</strong></p>
+<h2><span id="主键索引">主键索引</span></h2>
+<p>上面这颗以主键进行排序形成的B+树 叫做<strong>主键索引</strong> 也叫做<strong>聚簇索引</strong>。</p>
+<p><strong>当我们创建表时 Mysql会自动为主键生成一个主键索引，主键索引的特点是：</strong></p>
+<ol>
+<li>叶子结点上存储的是整行数据</li>
+<li>非叶子结点存储不是真实数据，而是一个主键值和页号 用来指向下一层的结点</li>
+<li>最上面3点都是以主键进行排序的</li>
+</ol>
+<p><strong>当我们对只有一个主键索引的表进行查询时，只有通过主键进行条件查询，这个索引才会查询，因为这个B+树是按照主键大小的顺序进行生成的！</strong></p>
+<h2><span id="二级索引">二级索引</span></h2>
+<p>如果想以别的列进行查询而且想利用索引，我们需要手动指定一个索引列，那么Mysql就会以这个列再建一个B+树<br>
+这种索引叫做<strong>二级索引</strong><br>
+<strong>特点如下：</strong></p>
+<ol>
+<li>叶子结点上存储的是<strong>索引列的值和主键值</strong></li>
+<li>非叶子结点存储不是真实数据，而是索引列的值和主键值还有页号 用来指向下一层的结点</li>
+<li>最上面3点都是以<strong>索引列的值</strong>进行排序的</li>
+</ol>
+<p><strong>注意！</strong> 因为二级索引的叶子节点上存储的不是整行数据，而是索引列的值和主键值，那么我们根据索引列的值找到了这行记录，并不代表我们获得了需要的列的值，还需要通过主键值去主键索引的那颗B+树上找到对应的整行记录。这种操作叫做 <strong>回表</strong></p>
+<p>为什么叶子结点不存储整行数据？因为太浪费空间了！每另外建立一个索引就会多一颗B+树，Mysql需要把所有用户记录拷贝一份给另外的B+树</p>
+<h2><span id="联合索引">联合索引</span></h2>
+<p>上面的二级索引是以单个列建的索引，页内和页之间的排序规则都是按照这单个列的大小进行排序的。</p>
+<p>我们也可以为多个列同时建立索引，比如我们为（c1,c2,c3）同时建立索引，那么页内数据和页之间的排序规则是这样的：</p>
+<ol>
+<li>先把各个记录和⻚按照c1列进⾏排序。</li>
+<li>在记录的c1列相同的情况下，采⽤c2列进⾏排序</li>
+<li>在记录的c2列相同的情况下，采⽤c3列进⾏排序</li>
+</ol>
+<p><strong>注意几点：</strong></p>
+<ol>
+<li>这颗B+树的叶子结点存储的是这3个列的值和主键值，非叶子节点存储的是3个列的值、主键值、页号</li>
+<li>为什么非叶子节点需要存储主键值？ 因为很有可能有相同的列，这时就用主键值保证非叶子节点中⽬录项记录的唯⼀性。</li>
+<li><strong>为每个列单独建立一个索引，那么会生成多个B+树</strong><br>
+<strong>而多个列一起建立一个索引，只会生成一个B+树</strong></li>
+</ol>
+<h2><span id="覆盖索引">覆盖索引</span></h2>
+<p>当我们通过一个索引列进行条件查询时，如果所需要的列和索引列刚好相符，那么就不需要进行回表，叶子节点上存储的就是我们需要的列值。这种叫做覆盖索引<br>
+<strong>所以查询的时候 最好不要写select * 需要什么列就写什么列</strong> 这样可以充分利用上覆盖索引</p>
+<h2><span id="myisam和innodb索引实现的不同">MyISAM和InnoDB索引实现的不同</span></h2>
+<ul>
+<li>[ ] MyISAM索引文件和数据文件是分离的，索引文件仅保存数据记录的地址，叶⼦节点中存储的不是完整的⽤		户记录，⽽是主键值 +⾏号的组合。也就是先通过索引找到对应 的⾏号，再通过⾏号去找对应的记录</li>
+<li>[ ] 在InnoDB存储引擎中，我 们只需要根据主键值对聚簇索引进⾏⼀次查找就能找到对应的<br>
+记录，⽽在MyISAM中却需要进⾏⼀次回表操作，意味 着MyISAM中建⽴的索引相当于全部都是⼆级索引</li>
+</ul>
+<h2><span id="索引的代价">索引的代价</span></h2>
+<p>既然索引查询这么快，那我们为每个列都创建索引岂不是很爽？当然不是！</p>
+<p><strong>创建索引代价如下：</strong></p>
+<ol>
+<li>每个索引都是一颗B+树，一颗B+树包含很多数据页，一个数据页16KB， 存储空间太大！</li>
+<li>每个增、删、改操作都可能会对节点和记录的排序造成 破坏，B+树为了维护有序性，所以存储引擎需要额外的时间进⾏⼀些记录移位。</li>
+<li><strong>页面分裂</strong>：如果一个数据页的数据满了，必须创建一个新的页然后挪动部分数据过去</li>
+<li><strong>页面合并</strong>：如果一个数据页的数据被删了很多，为了提高利用率，还需要将数据页合并</li>
+</ol>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/RabbitMQ工作模式总结/" data-toggle="tooltip" data-placement="top" title="RabbitMQ工作模式总结">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/1.7HashMap/" data-toggle="tooltip" data-placement="top" title="Jdk1.7HashMap源码解析">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">数据页结构分析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">这时可以总结一波</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">索引分析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">注意！形成这颗B+树必须有几个前提！</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">主键索引</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">二级索引</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">联合索引</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">覆盖索引</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">MyISAM和InnoDB索引实现的不同</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">索引的代价</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#mysql" title="mysql">mysql</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.csdn.net/wmh1152151276" target="_blank">CSDN Blog jpower</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/5129190650">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/jpower">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; JPower 2019 
+                    <br>
+                    Theme by <a href="http://huweihuang.com">胡伟煌</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.jpower.top">jpower</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=jpower&repo=jpower.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://www.jpower.top/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://www.jpower.top/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
