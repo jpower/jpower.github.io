@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          RabbitMQ工作模式总结 - JPower | Blog
+          [Hexo] Theme HuWeihuang - JPower | Blog
         
     </title>
 
-    <link rel="canonical" href="http://www.jpower.top/article/RabbitMQ工作模式总结/">
+    <link rel="canonical" href="http://www.jpower.top/article/hexo-theme-huweihuang/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -71,7 +71,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('https://tva1.sinaimg.cn/large/005B7yNsly1g83ufp1a7mj31z418g4qp.jpg')
+            background-image: url('/img/article_header/article_header.png')
             /*post*/
         
     }
@@ -88,14 +88,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#消息队列" title="消息队列">消息队列</a>
+                              <a class="tag" href="/tags/#Hexo" title="Hexo">Hexo</a>
                             
                         </div>
-                        <h1>RabbitMQ工作模式总结</h1>
-                        <h2 class="subheading"></h2>
+                        <h1>[Hexo] Theme HuWeihuang</h1>
+                        <h2 class="subheading">This is hexo theme Demo.</h2>
                         <span class="meta">
                             Posted by JPower on
-                            2019-10-19
+                            2017-09-18
                         </span>
                     </div>
                 
@@ -212,44 +212,59 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h1><span id="先看下rabbitqmq的基本架构"><strong>先看下rabbitqmq的基本架构</strong></span></h1>
-<p><img src="https://img-blog.csdnimg.cn/2019051716344946.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtaDExNTIxNTEyNzY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h2><span id="rabbitmq组件"><strong>rabbitmq组件</strong></span></h2>
-<ol>
-<li>生产者 producer</li>
-<li>消费者 consumer</li>
-<li>broker 该消息队列进程 就代表这个消息队列   broker里面包含了重要的2个组件</li>
-<li>一个是交换机：Exchange</li>
-<li>一个是队列：Queue</li>
-</ol>
-<p><img src="https://img-blog.csdnimg.cn/20190517163930785.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtaDExNTIxNTEyNzY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h1><span id="下面介绍几种工作模式">下面介绍几种工作模式：</span></h1>
-<h2><span id="简单队列模式">简单队列模式</span></h2>
-<p>不用显示声明交换机，只需声明一个队列<br>
-	生产者指定队列名发送消息给mq，然后会有一个默认的交换机将消息转发给这个队列。<br>
-	消费者负责监听这个队列，一有消息就会得到通知做出响应。</p>
-<h2><span id="工作队列模式work-queues">工作队列模式（Work queues）</span></h2>
-<p>和简单队列模式基本一样，不过有一点不同，该模式有多个消费者在监听队列。<br>
-rabbitmq会以轮询的方式将消息发给多个消费者确保一条消息只会被一个消费者消费</p>
-<h2><span id="发布订阅模式publishsubscribe">发布订阅模式（Publish/subscribe）</span></h2>
-<p>和上面2种模式默认提供交换机不同的是，该模式需要显示声明交换机，然后可以创建多个队列和这个交换机进行绑定。</p>
-<p>生产者发消息给mq时需要指定交换机，然后交换机将消息转发给与自己绑定的所有队列，消费者监听指定的队列获得消息。</p>
-<p>每个队列可以有多个消费者监听，同样也是以轮询的机制发给消费者。</p>
-<p><img src="https://img-blog.csdnimg.cn/20190517181259720.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dtaDExNTIxNTEyNzY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h2><span id="routing-模式">Routing 模式</span></h2>
-<p>和发布订阅模式不同的是，队列绑定交换机时需要指定一个routingkey<br>
-那么生产者发送消息时不仅需要指定交换机还需要指定routingkey<br>
-这样的话交换机就会把消息转发给跟自己绑定并且routingkey相匹配的队列</p>
-<h2><span id="topic模式">Topic模式</span></h2>
-<p>和Routing模式唯一的不同就是可以设置带有通配符进行模糊匹配的routingkey</p>
-<h2><span id="heard模式">heard模式</span></h2>
-<p>和Routing模式的不同就是 取消了routing 使用键值对的方式作为routing</p>
-<p><img src="https://img-blog.csdnimg.cn/2019051720110060.png" alt="在这里插入图片描述"></p>
-<p><strong>这里注意</strong><br>
-设置交换机的时候需要设置交换机的类型 有4种类型分别对应4种需要指定交换机的工作模式<br>
-<img src="https://img-blog.csdnimg.cn/20190517200610605.png" alt="在这里插入图片描述"></p>
-<p><strong>案例代码：</strong><br>
-<a href="https://github.com/jpower/test-rabbitmq" target="_blank" rel="noopener">https://github.com/jpower/test-rabbitmq</a></p>
+                <blockquote>
+<p>This HuWeihuang theme created by <a href="http://www.huweihuang.com/" target="_blank" rel="noopener">HuWeihuang</a> modified from the original Porter <a href="https://github.com/YenYuHsuan/hexo-theme-beantech" target="_blank" rel="noopener">YuHsuan</a></p>
+</blockquote>
+<h1><span id="live-demo">Live Demo</span></h1>
+<p>Hu Weihuang Blog : <a href="http://www.huweihuang.com/" target="_blank" rel="noopener">www.huweihuang.com</a></p>
+<p><img src="https://res.cloudinary.com/dqxtn0ick/image/upload/v1553666111/blog/blog.jpg" alt="Theme HuWeihuang"></p>
+<h1><span id="install-hexo">Install Hexo</span></h1>
+<p>Install Node.js  and Git</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>For Mac</span><br><span class="line">brew install node</span><br><span class="line">brew install git</span><br></pre></td></tr></table></figure>
+<p>Install hexo</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>For more:https://hexo.io/zh-cn/index.html</span><br></pre></td></tr></table></figure>
+<h1><span id="theme-usage">Theme Usage</span></h1>
+<h2><span id="init">Init</span></h2>
+<hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/huweihuang/hexo-theme-huweihuang.git ./hexo-huweihuang</span><br><span class="line"><span class="built_in">cd</span> hexo-huweihuang</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<h2><span id="modify">Modify</span></h2>
+<hr>
+<p>Modify <code>_config.yml</code> file with your own info.<br>
+Especially the section:</p>
+<h3><span id="deployment">Deployment</span></h3>
+<p>Replace to your own repo!</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="attr">https://github.com/&lt;yourAccount&gt;/&lt;repo&gt;</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">&lt;your-branch&gt;</span></span><br></pre></td></tr></table></figure>
+<h3><span id="sidebar-settings">Sidebar settings</span></h3>
+<p>Copy your avatar image to <code>&lt;root&gt;/img/</code> and modify the <code>_config.yml</code>:</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">sidebar:</span> <span class="literal">true</span>    <span class="comment"># whether or not using Sidebar.</span></span><br><span class="line"><span class="attr">sidebar-about-description:</span> <span class="string">"&lt;your description&gt;"</span></span><br><span class="line"><span class="attr">sidebar-avatar:</span> <span class="string">img/&lt;your</span> <span class="string">avatar</span> <span class="string">path&gt;</span></span><br></pre></td></tr></table></figure>
+<p>and activate your personal widget you like</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">widgets:</span>         <span class="comment"># here are widget you can use, you can comment out</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">featured-tags</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">short-about</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">recent-posts</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">friends-blog</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">archive</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">category</span></span><br></pre></td></tr></table></figure>
+<p>if you want to add sidebar widget, please add at <code>layout/_widget</code>.</p>
+<h3><span id="signature-setup">Signature Setup</span></h3>
+<p>Copy your signature image to <code>&lt;root&gt;/img/signature</code> and modify the <code>_config.yml</code>:</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">signature:</span> <span class="literal">true</span>   <span class="comment"># show signature</span></span><br><span class="line"><span class="attr">signature-img:</span> <span class="string">img/signature/&lt;your-signature-ID&gt;</span></span><br></pre></td></tr></table></figure>
+<h3><span id="go-to-top-icon-setup">Go to top icon Setup</span></h3>
+<p>My icon is using iron man, you can change to your own icon at <code>css/image</code>.</p>
+<h3><span id="post-tag">Post tag</span></h3>
+<p>You can decide to show post tags or not.</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">home_posts_tag:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p><img src="/img/article/tag.png" alt="home_posts_tag-true"></p>
+<h3><span id="markdown-render">Markdown render</span></h3>
+<p>My markdown render engine plugin is <a href="https://github.com/celsomiranda/hexo-renderer-markdown-it" target="_blank" rel="noopener">hexo-renderer-markdown-it</a>.</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Markdown-it config</span></span><br><span class="line"><span class="comment">## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki</span></span><br><span class="line"><span class="attr">markdown:</span></span><br><span class="line"><span class="attr">  render:</span></span><br><span class="line"><span class="attr">    html:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    xhtmlOut:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">    breaks:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    linkify:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    typographer:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    quotes:</span> <span class="string">'“”‘’'</span></span><br></pre></td></tr></table></figure>
+<p>and if you want to change the header anchor ‘ℬ’, you can go to <code>layout/post.ejs</code> to change it.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span>(<span class="string">"https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        anchors.options = &#123;</span><br><span class="line">          visible: <span class="string">'hover'</span>,</span><br><span class="line">          placement: <span class="string">'left'</span>,</span><br><span class="line">          icon: ℬ <span class="comment">// this is the header anchor "unicode" icon</span></span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure>
+<h2><span id="hexo-basics">Hexo Basics</span></h2>
+<hr>
+<p>Some hexo command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo new post <span class="string">"&lt;post name&gt;"</span> <span class="comment"># you can change post to another layout if you want</span></span><br><span class="line">hexo clean &amp;&amp; hexo generate <span class="comment"># generate the static file</span></span><br><span class="line">hexo server <span class="comment"># run hexo in local environment</span></span><br><span class="line">hexo deploy <span class="comment"># hexo will push the static files automatically into the specific branch(gh-pages) of your repo!</span></span><br></pre></td></tr></table></figure>
+<h1><span id="have-fun-_">Have fun ^_^</span></h1>
+<hr>
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Place this tag where you want the button to render. -->
+<p>Please <a class="github-button" href="https://github.com/huweihuang/hexo-theme-huweihuang" data-icon="octicon-star" aria-label="Star huweihuang/hexo-theme-huweihuang on GitHub" target="_blank" rel="noopener">Star</a> this Project if you like it! <a class="github-button" href="https://github.com/huweihuang" aria-label="Follow @huweihuang on GitHub" target="_blank" rel="noopener">Follow</a> would also be appreciated!<br>
+Peace!</p>
 
                 
 
@@ -257,10 +272,10 @@ rabbitmq会以轮询的方式将消息发给多个消费者确保一条消息只
                 <!-- Pager -->
                 <ul class="pager">
                     
-                    
-                        <li class="next">
-                            <a href="/article/MySQL索引总结/" data-toggle="tooltip" data-placement="top" title="MySQL索引总结">Next Post &rarr;</a>
+                        <li class="previous">
+                            <a href="/article/Elasticsearch笔记/" data-toggle="tooltip" data-placement="top" title="Elasticsearch">&larr; Previous Post</a>
                         </li>
+                    
                     
                 </ul>
 
@@ -304,18 +319,12 @@ rabbitmq会以轮询的方式将消息发给多个消费者确保一条消息只
             <!-- Table of Contents -->
 
   
-    <style>
-      span.toc-nav-number{
-        display: none
-      }
-    </style>
-  
     
       <aside id="sidebar">
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">先看下rabbitqmq的基本架构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">rabbitmq组件</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">下面介绍几种工作模式：</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">简单队列模式</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">工作队列模式（Work queues）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">发布订阅模式（Publish/subscribe）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">Routing 模式</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.5.</span> <span class="toc-nav-text">Topic模式</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.6.</span> <span class="toc-nav-text">heard模式</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Live Demo</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Install Hexo</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Theme Usage</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">Init</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">Modify</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.1.</span> <span class="toc-nav-text">Deployment</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.2.</span> <span class="toc-nav-text">Sidebar settings</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.3.</span> <span class="toc-nav-text">Signature Setup</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.4.</span> <span class="toc-nav-text">Go to top icon Setup</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.5.</span> <span class="toc-nav-text">Post tag</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.2.6.</span> <span class="toc-nav-text">Markdown render</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">Hexo Basics</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#null"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Have fun ^_^</span></a></li></ol>
         
         </div>
       </aside>
@@ -335,7 +344,7 @@ rabbitmq会以轮询的方式将消息发给多个消费者确保一条消息只
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#消息队列" title="消息队列">消息队列</a>
+                          <a class="tag" href="/tags/#Hexo" title="Hexo">Hexo</a>
                         
                     </div>
                 </section>
