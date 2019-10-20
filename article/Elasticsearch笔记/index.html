@@ -61,6 +61,9 @@
 
     <!-- ga & ba script hoook -->
     <script></script>
+
+        <!--不蒜子-->
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </head>
 
 
@@ -69,36 +72,45 @@
 	<!-- Modified by Yu-Hsuan Yen -->
 <!-- Post Header -->
 <style type="text/css">
-    header.intro-header{
-        
-            background-image: url('https://tva1.sinaimg.cn/large/005B7yNsly1g83ufp1a7mj31z418g4qp.jpg')
-            /*post*/
-        
+    header.intro-header {
+        background-image: url('https://tva1.sinaimg.cn/large/005B7yNsly1g83ufp1a7mj31z418g4qp.jpg')
+                /*post*/
+                
     }
+
     
 </style>
 
-<header class="intro-header" >
+<header class="intro-header">
     <!-- Signature -->
     <div id="signature">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                
+                    
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#elasticsearch" title="elasticsearch">elasticsearch</a>
+                            <a class="tag" href="/tags/#elasticsearch"
+                                title="elasticsearch">elasticsearch</a>
                             
                         </div>
-                        <h1>Elasticsearch</h1>
-                        <h2 class="subheading">Elasticsearch笔记</h2>
+                        <h2>Elasticsearch</h2>
+                        <h3 class="subheading">Elasticsearch笔记</h3>
+
                         <span class="meta">
                             Posted by JPower on
                             2019-10-19
                         </span>
+                        <br>
+                        <!--文章访问量统计-->
+                        
+                        <span id="busuanzi_container_page_pv">本文访问量：<span id="busuanzi_value_page_pv"></span></span>
+                        
+                        <!--文章访问量统计-->
+
                     </div>
-                
+                    
 
 
                 </div>
@@ -106,7 +118,6 @@
         </div>
     </div>
 </header>
-
 	
     <!-- Navigation -->
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
@@ -1126,6 +1137,44 @@ GET /_cat/indices?v&amp;h=i,tm&amp;s=tm:desc</p>
     }
 </style>
 
+<!-- 复制添加版权申明-->
+<script>
+    /**/
+    function setClipboardText(event){
+        event.preventDefault();//阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）。
+        var node = document.createElement('div');
+        //对documentfragment不熟，不知道怎么获取里面的内容，用了一个比较笨的方式
+        node.appendChild(window.getSelection().getRangeAt(0).cloneContents());
+        //getRangeAt(0)返回对基于零的数字索引与传递参数匹配的选择对象中的范围的引用。对于连续选择，参数应为零。
+        var htmlData = '<div>'
+            + node.innerHTML
+            + '<br /><br />著作权归作者所有。<br />'
+            + '商业转载请联系作者获得授权，非商业转载请注明出处。<br />'
+            + '作者：jpower <br />链接：'
+            + location.href
+            + '<br />来源：jpower.top<br /><br />'
+            + '</div>';
+        var textData = window.getSelection().getRangeAt(0)
+            + '\n\n著作权归作者所有。\n'
+            + '商业转载请联系作者获得授权，非商业转载请注明出处。\n'
+            + '作者：jpower\n'
+            + '链接：'
+            + location.href
+            + '来源：jpower.top\n\n';
+        if(event.clipboardData){
+            event.clipboardData.setData("text/html", htmlData);
+            //setData(剪贴板格式, 数据) 给剪贴板赋予指定格式的数据。返回 true 表示操作成功。
+            event.clipboardData.setData("text/plain",textData);
+        }
+        else if(window.clipboardData){ //window.clipboardData的作用是在页面上将需要的东西复制到剪贴板上，提供了对于预定义的剪贴板格式的访问，以便在编辑操作中使用。
+            return window.clipboardData.setData("text", textData);
+        }
+    };
+ 
+    document.addEventListener('copy',function(e){
+        setClipboardText(e);
+    });
+</script>
 
 <!-- chrome Firefox 中文锚点定位失效-->
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
@@ -1133,17 +1182,19 @@ GET /_cat/indices?v&amp;h=i,tm&amp;s=tm:desc</p>
 <script type="text/javascript" src="/js/smoothscroll.js"></script>
 <script>
         $('#toc').on('click','a',function(a){
-            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
             // console.log(window.navigator.userAgent,isChrome)
-                // if(isChrome) {
-                    // console.log(a.currentTarget.outerHTML);
-                    // console.log($(a.currentTarget).attr("href"));
-                    //跳转到指定锚点
-                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
-                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
-                // }
+                if(isChrome) {
+                    console.log(a.currentTarget.outerHTML);
+                    console.log($(a.currentTarget).attr("href"));
+                    // 跳转到指定锚点
+                    document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    // document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                }
         })  
 </script>
+
+
 
 
     <!-- Footer -->
@@ -1205,7 +1256,8 @@ GET /_cat/indices?v&amp;h=i,tm&amp;s=tm:desc</p>
                         style="margin-left: 2px; margin-bottom:-5px;"
                         frameborder="0" scrolling="0" width="91px" height="20px"
                         src="https://ghbtns.com/github-btn.html?user=jpower&repo=jpower.github.io&type=star&count=true" >
-                    </iframe>
+                    </iframe><br>
+                    <a href="http://www.beian.gov.cn">赣ICP备 19012654号</a>
                 </p>
             </div>
         </div>
@@ -1312,6 +1364,7 @@ GET /_cat/indices?v&amp;h=i,tm&amp;s=tm:desc</p>
       s.parentNode.insertBefore(hm, s);
     })();
 </script>
+
 
 
 

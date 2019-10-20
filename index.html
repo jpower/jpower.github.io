@@ -61,6 +61,9 @@
 
     <!-- ga & ba script hoook -->
     <script></script>
+
+        <!--不蒜子-->
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </head>
 
 
@@ -69,28 +72,32 @@
 	<!-- Modified by Yu-Hsuan Yen -->
 <!-- Post Header -->
 <style type="text/css">
-    header.intro-header{
-        
-            background-image: url('https://tva1.sinaimg.cn/large/005B7yNsly1g83ne87l5xj311y0lck1h.jpg') 
-            /*config*/
-        
+    header.intro-header {
+        background-image: url('https://tva1.sinaimg.cn/large/005B7yNsly1g83ne87l5xj311y0lck1h.jpg')
+                /*config*/
+                
     }
+
     
 </style>
 
-<header class="intro-header" >
+<header class="intro-header">
     <!-- Signature -->
     <div id="signature">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                
+                    
                     <div class="site-heading">
                         <h1>JPower</h1>
                         <!--<hr class="small">-->
                         <span class="subheading">JPower&#39;s Blog</span>
+                            
+<br>
+              
+
                     </div>
-                
+                    
 
 
                 </div>
@@ -98,7 +105,6 @@
         </div>
     </div>
 </header>
-
 	
     <!-- Navigation -->
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
@@ -234,7 +240,7 @@ broker 该消息队列进程 就代表这个消息队列   broker里面包含了
 下面介绍几种工作模式：
 简单队列模式
 不用显示声明交换机，只需声明一个队列
-	生产者指定队列名发送消息给mq，然后会有一个默认的......
+	生产者指定......
         </div>
     </a>
     
@@ -269,7 +275,7 @@ broker 该消息队列进程 就代表这个消息队列   broker里面包含了
 作者：小孩子4919
 
 数据页结构分析
-InnoDB存储引擎会把表数据存储到磁盘上，当想对数据操作时需要把磁盘上的数据加载到内存中来，为了提高效率，InnoDB不会一条一条的加载，它会以页（16K......
+InnoDB存储引擎会把表数据存储到磁盘上，当想对数据操作时需要把磁盘上的数据加载到内存中来，为了提高效率，Inno......
         </div>
     </a>
     
@@ -291,6 +297,13 @@ InnoDB存储引擎会把表数据存储到磁盘上，当想对数据操作时�
 
     <a href="/article/1.7HashMap/">
         <h2 class="post-title">
+            
+                <i class="fa fa-thumb-tack" style="color:rgb(120, 186, 230)" ></i>
+                <!-- <i class="fa fa-thumb-tack" style="color:#F89E8C" ></i> -->
+                <!-- <i class="fa fa-thumb-tack" style="color:#1CB7ED" ></i> -->
+                <span style="color:rgb(120, 186, 230)">置顶</span>
+                <!-- <font color=#F89E8C>置顶</font>  -->
+                <!-- <font color=#1CB7ED>置顶</font>  -->
                                  
             Jdk1.7HashMap源码解析
         </h2>
@@ -304,7 +317,7 @@ HashMap已经看了很多篇文章了，今天还是自己解析一遍吧。
 什么是哈希表？
 我先大致介绍下HashMap的内部结构再跟着源码解读一番
 众所周知HashMap的内部就是一个哈希表
-如果我们利用数组可随机访问的特性，将要存入的键通过一种哈希算法转换成一个数字，并把这个数字转换成数组的下标，然后将键和他对应value放入数组中。那么我们再通过这个键查找时，只需要继续利用这个算法，那么我们就只......
+如果我们利用数组可随机访问的特性，将要存入的键通过一种哈希算法转换成一个数字，并把这个数字转换成数组的下标，然后将键和他对应value放入数组中。那么我们再通过这个键查找......
         </div>
     </a>
     
@@ -336,7 +349,7 @@ HashMap已经看了很多篇文章了，今天还是自己解析一遍吧。
             Elasticsearch简介
 Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，就是一个分布式的文档数据存储系统。ES是分布式的。文档数据存储系统。文档数据，存储系统。
 文档数据：es可以存储和操作json文档类型的数据，而且这也是es的核心数据结构。
-存储系统：es可以对json文档类型的数据进行存储，查询，创建，更新，删除，等等操作。其实已经起到了一个什么样的效果呢......
+存储系统：es可以对json文档类型的数据进行存储，查询，创建，更新，删除，等......
         </div>
     </a>
     
@@ -587,7 +600,8 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
                         style="margin-left: 2px; margin-bottom:-5px;"
                         frameborder="0" scrolling="0" width="91px" height="20px"
                         src="https://ghbtns.com/github-btn.html?user=jpower&repo=jpower.github.io&type=star&count=true" >
-                    </iframe>
+                    </iframe><br>
+                    <a href="http://www.beian.gov.cn">赣ICP备 19012654号</a>
                 </p>
             </div>
         </div>
@@ -694,6 +708,7 @@ Elasticsearch在跑起来以后，其实起到的第一个最核心的功能，�
       s.parentNode.insertBefore(hm, s);
     })();
 </script>
+
 
 
 
